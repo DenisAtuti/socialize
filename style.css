@@ -51,6 +51,21 @@ nav .search input{
     padding: 2rem;
     border-right:solid 1rem var(--accent-color);
 }
+nav .search input.search-input::-webkit-search-cancel-button{
+    -webkit-appearance: none;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    background: url(https://pro.fontawesome.com/releases/v5.10.0/svgs/solid/times-circle.svg) no-repeat 50% 50%;
+    background-size: contain;
+    opacity: 0;
+    pointer-events: none;
+    background-color: var(--primary-color);
+}
+nav .search input.search-input:focus::-webkit-search-cancel-button{
+    opacity: 0.5;
+    pointer-events: all;
+}
 
 nav .search i{
     font-size: 2rem;
