@@ -1,5 +1,5 @@
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = true;
+const isLogedIn = false;
 
 
 /////// IF LOGEDIN ////
