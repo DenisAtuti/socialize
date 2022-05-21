@@ -120,11 +120,11 @@ videos.forEach(videoItem =>{
         videoItem.setAttribute("src" ,"https://node-images-test.s3.eu-west-2.amazonaws.com/Pexels+Videos+2292093.mp4")
     })
    
-    videojs(videoItem, {
-        controls: true,
-        autoplay: false,
-        preload: 'auto'
-    });
+    // videojs(videotem, {
+    //     controls: true,
+    //     autoplay: false,
+    //     preload: 'auto'
+    // });
 })
 
 

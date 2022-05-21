@@ -8,6 +8,7 @@
 
 html {
     font-size: 50.5%;
+    scroll-behavior: smooth;
 }
 
 :root{
@@ -16,6 +17,7 @@ html {
     --accent-color:#F1F1F2;
     --icon-color:#292929;
     --background-hover-color:#E7EAED;
+    --light-gey:#D3D3D3;
 }
 body{
     font-family:'Lato', sans-serif;
@@ -26,12 +28,17 @@ body{
 nav{
     padding-top: 2rem;
     padding-bottom: 2rem;
-    border-top: solid 0.2rem var(--accent-color);
-    border-bottom: solid 0.2rem var(--accent-color);
+    /* border-top: solid 0.2rem var(--accent-color); */
+    /* border-bottom: solid 0.2rem var(--accent-color); */
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     height: 10vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500;
 }
 nav .brand{
     font-size: 3rem;
@@ -163,16 +170,17 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 
 .container{
     /* margin-top: 10vh; */
-    height: 90vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
 }
 
 /* /////////// SIDE MENU /////// */
 .container .menu-container{
-    height: 90vh;
-    /* max-width: 40%; */
-    /* min-width: 20%; */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     overflow: auto;
     padding: 2rem 2rem 0 2rem;
 }
@@ -351,6 +359,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 .container .post-container{
     overflow-y: auto;
     scroll-snap-type: block mandatory;
+    height: 100vh;
+    /* background-color: green; */
     /* width: 100%; */
     
 }
@@ -370,15 +380,26 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 
 .post-container .post{
-    height: 90vh;
+    height: 100vh;
     display: flex;
     overflow:auto;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
     scroll-snap-align:center;
-    padding-top: 2rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    position: relative;
+    /* padding-top: 2rem; */
+    /* margin-left: 1rem; */
+    /* margin-right: 1rem; */
+    /* background-color: green; */
+}
+/* ////////////POST HEADER////////// */
+.post-container .post .post-header{
+    position: absolute;
+    bottom: 10vh;
+    left: 0;
+    color: var(--light-gey);
+    
 }
 
 
@@ -392,12 +413,13 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 .post-container .post .profile-container .profile{
     display: flex;
     align-items: center;
+    background-color: transparent;
 
 }
 .post-container .post .profile-container .profile .image{
     height: 7rem;
     width: auto;
-    background-color: var(--background-hover-color);
+    background-color: transparent;
     border-radius: 50%;
     overflow: hidden;
 
@@ -479,15 +501,25 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 /* ////// VIDEO PLAYER //// */
 
 .post-container .post .video-player-container{
+    height: 100%;
+    width: 100%;
+}
+.post-container .post .video-player-container .player{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+}
+.post-container .post .video-player-container .player video{
+    height: 100%;
+    width: auto;
 }
 
 .post-container .post .video-player-container .player .video-js{
-    height: 720px;
-    width: 480px;
-    border-radius: 2rem;
+    height: 100%;
+    width: 100%;
 }
 .post-container .post .video-player-container .player .vjs-control-bar{
     border-bottom-left-radius: 2rem;
@@ -496,15 +528,17 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     
 }
 
-.post-container .post .video-player-container .link-container{
-    margin-left: 2rem;
+.post-container .post .link-container{
+    position: absolute;
+    right: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 2rem;
+    color: var(--light-gey);
 }
 
 
-.post-container .post .video-player-container .link-container .link{
+.post-container .post .link-container .link{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -514,8 +548,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     cursor: pointer;
 }
 
-.post-container .post .video-player-container .link-container .link i{
-    font-size: 3rem;
+.post-container .post .link-container .link i{
+    font-size: 4rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
@@ -527,23 +561,24 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 
 } */
 
-.post-container .post .video-player-container .link-container .link-profile{
+.post-container .post .link-container .link-profile{
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.post-container .post .video-player-container .link-container .link-profile .image{
+.post-container .post .link-container .link-profile .image{
     height: 7rem;
-    background-color: var(--accent-color);
+    background-color: transparent;
     border-radius: 50%;
+    border: solid 0.5rem var(--light-gey);
     overflow: hidden;
 }
-.post-container .post .video-player-container .link-container .link-profile .image img{
+.post-container .post .link-container .link-profile .image img{
     height: 100%;
     width: auto;
     object-fit: cover;
 }
-.post-container .post .video-player-container .link-container .link-profile i{
+.post-container .post .link-container .link-profile i{
     background-color: var(--primary-color);
     padding: 0.5rem;
     font-size: 1.2rem;
@@ -583,6 +618,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     margin-right: 2rem;
     width: 100%;
 }
+
+
 .post-container .post .comment-container .comment .profile-container{
     display: flex;
     flex-direction: column;
@@ -949,9 +986,12 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
         justify-content: space-evenly;
         width: 100%;
     }
+    .post-container .post .video-player-container .player{
+        background-color: transparent;
+    }
     .post-container .post .video-player-container .player .video-js{
-        height: 480px;
-        width: 250px;
+        height: 100%;
+        width: 100%;
     }
 
 }
