@@ -28,8 +28,8 @@ body{
 nav{
     padding-top: 2rem;
     padding-bottom: 2rem;
-    /* border-top: solid 0.2rem var(--accent-color); */
-    /* border-bottom: solid 0.2rem var(--accent-color); */
+    border-top: solid 0.2rem var(--accent-color);
+    border-bottom: solid 0.2rem var(--accent-color);
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -39,6 +39,7 @@ nav{
     left: 0;
     width: 100%;
     z-index: 500;
+    /* background-color: rgba(0, 0, 0, 0.25); */
 }
 nav .brand{
     font-size: 3rem;
@@ -55,7 +56,7 @@ nav .search input{
     background-color: transparent;
     font-size: 2rem;
     outline: 0;
-    padding: 2rem;
+    padding: 1.5rem;
     border-right:solid 1rem var(--accent-color);
 }
 nav .search input.search-input::-webkit-search-cancel-button{
@@ -86,9 +87,9 @@ nav .search i:hover{
     background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25));
 }
 nav .login{
-    display: flex;
+    display: none;
 }
-nav .login button{
+/* nav .login button{
     padding: 1rem 5rem;
     font-size: 2rem;
     font-weight: bold;
@@ -97,10 +98,10 @@ nav .login button{
     border-radius: 0.5rem;
     cursor: pointer;
     color: #fff;
-}
-nav .login button:hover{
+} */
+/* nav .login button:hover{
     background: linear-gradient(rgba(255, 163, 26, 0.9), rgba(255, 163, 26, 0.9));
-}
+} */
 
 /* ///// profile image ///// */
 
@@ -112,7 +113,6 @@ nav .login .profile-image{
     border-radius: 50%;
     transition: border 0.5s ease;
     overflow: hidden;
-    display: none;
 }
 nav .login .profile-image:hover{
     border: solid 0.05rem var(--accent-color);
@@ -388,6 +388,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     flex-direction: column;
     scroll-snap-align:center;
     position: relative;
+    overflow: hidden;
     /* padding-top: 2rem; */
     /* margin-left: 1rem; */
     /* margin-right: 1rem; */
@@ -709,7 +710,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 /* //////// AD CONTAINER SECTION //////// */
 .post-container .post .ad-container{
     background-color: var(--icon-color);
-    width: 100%;
+    width: 98%;
     position: relative;
     margin-top: -15rem;
     opacity: 0;

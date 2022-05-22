@@ -5,7 +5,7 @@ const isLogedIn = false;
 /////// IF LOGEDIN ////
 
 //...... display profile when login .....
-const profileImage = document.querySelector(".profile-image")
+const profileImage = document.querySelector("nav >.login")
 if (isLogedIn) {
     profileImage.style.display = "block"
 }
