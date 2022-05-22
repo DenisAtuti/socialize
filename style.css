@@ -395,7 +395,6 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     align-items: center;
 }
 .post-container .post .profile-container .profile{
-    width: 100%;
     display: flex;
     justify-content: space-between;
     background-color: transparent;
@@ -406,6 +405,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 5rem;
 }
 .post-container .post .profile-container .profile .username p{
     font-size: 2rem;
@@ -419,7 +419,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     padding: 0.2rem;
     font-size: 1rem;
 }
-.post-container .post .profile-container .follow-btn button{
+.post-container .post .profile-container .profile .follow-btn button{
     padding: 0.5rem 2rem;
     font-size: 1.5rem;
     color: var(--primary-color);
@@ -475,7 +475,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     width: auto;
 }
 
-.post-container .post .video-player-container .player .video-js{
+/* .post-container .post .video-player-container .player .video-js{
     height: 100%;
     width: 100%;
 }
@@ -484,7 +484,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     border-bottom-right-radius: 2rem;
     color: var(--primary-color);
     
-}
+} */
 
 .post-container .post .link-container{
     position: absolute;
@@ -511,8 +511,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
-.post-container .post .video-player-container .link-container .link span{
-    font-size: 1rem;
+.post-container .post .link-container .link span{
+    font-size: 1.5rem;
 }
 
 .post-container .post .link-container .link-profile{
