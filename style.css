@@ -940,6 +940,12 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     .container .post-container{
         width: 100%;
     }
+    
+    /* /// VIDEO POST SECTION SCROLL BAR ///// */
+
+    .post-container::-webkit-scrollbar{
+        width: 0;
+    }
     .container .post-container .post{
         width: 100%;
     }

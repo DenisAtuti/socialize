@@ -94,7 +94,7 @@ const observer = new IntersectionObserver(
     entries =>{
         entries.forEach(entry =>{
 
-            if (entry.target.classList.contains("vjs-tech")) {
+            if (entry.target.classList.contains("film")) {
 
                 if (entry.isIntersecting) {
 
