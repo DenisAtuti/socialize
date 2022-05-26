@@ -387,6 +387,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     color: var(--light-gey);
     margin-left: 1rem;
     width: 50vw;
+    opacity: 1;
+    transition: opacity 0.4s;
     
 }
 
@@ -477,6 +479,12 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     max-height: 100%;
     max-width: auto;
 }
+.post-container .post .video-player-container .player video::-webkit-media-controls, 
+.post-container .post .video-player-container .player video::-moz-media-controls, 
+.post-container .post .video-player-container .player video::-o-media-controls, 
+.post-container .post .video-player-container .player video::-ms-media-controls {
+    display: none !important;
+  }
 
 /* .post-container .post .video-player-container .player .video-js{
     height: 100%;
@@ -496,6 +504,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     flex-direction: column;
     padding: 2rem;
     color: var(--light-gey);
+    opacity: 1;
+    transition: opacity 0.4s;
 }
 
 
@@ -741,6 +751,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 .post-container .post .link-container.active{
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.4s;
 
 }
 
