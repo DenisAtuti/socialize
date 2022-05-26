@@ -1,6 +1,5 @@
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = false;
-
+const isLogedIn = true;
 
 /////// IF LOGEDIN ////
 
@@ -9,10 +8,10 @@ const profileImage = document.querySelector("nav >.login")
 if (isLogedIn) {
     profileImage.style.display = "block"
 }
-const navLoginBtn = document.querySelector(".login button")
-if (isLogedIn) {
-    navLoginBtn.style.display = "none"
-}
+// const navLoginBtn = document.querySelector(".login button")
+// if (isLogedIn) {
+//     navLoginBtn.style.display = "none"
+// }
 
 // .......side menu button.....
 const loginMenuBtn = document.querySelector(".side-login-btn")
@@ -130,6 +129,14 @@ videos.forEach(videoItem =>{
         })
        
     })
+    videoItem.addEventListener("waiting",()=>{
+        videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
+
+    })
+    videoItem.addEventListener("playing",()=>{
+        videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
+    })
+
    
 })
 

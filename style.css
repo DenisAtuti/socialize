@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,900&display=swap');
+
 *{
     padding: 0;
     margin: 0;
@@ -20,7 +20,9 @@ html {
     --light-gey:#D3D3D3;
 }
 body{
-    font-family:'Lato', sans-serif;
+    font-family: 'Indie Flower', cursive;
+    font-family: 'Lato', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     position: relative;
 }
 
@@ -474,17 +476,42 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 .post-container .post .video-player-container .player video{
     max-height: 100%;
     max-width: auto;
+    z-index: 0;
 }
 .post-container .post .video-player-container .player video::-webkit-media-controls, 
 .post-container .post .video-player-container .player video::-moz-media-controls, 
 .post-container .post .video-player-container .player video::-o-media-controls, 
 .post-container .post .video-player-container .player video::-ms-media-controls {
     display: none !important;
-  }
+}
+/* loading icon */
+.post-container .post .video-player-container .player .loading-icon{
+    position: absolute;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.post-container .post .video-player-container .player .loading-icon.active{
+    opacity: 1;
+    transition: opacity 0.4s;
+
+}
+.post-container .post .video-player-container .player .loading-icon i{
+    font-size: 5rem;
+    color: var(--primary-color);
+}
 
 /* .post-container .post .video-player-container .player .video-js{
     height: 100%;
