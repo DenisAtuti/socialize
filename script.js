@@ -83,7 +83,7 @@ likedBtn.addEventListener("click",() =>{
 
 
 
-/////////// VIDEO JS SECTION ////////
+/////////// VIDEO SECTION ////////
 
 //.......auto play as soon as it visible
 
@@ -116,8 +116,19 @@ const observer = new IntersectionObserver(
 
 videos.forEach(videoItem =>{
     observer.observe(videoItem)
-    videoItem.addEventListener('ended',()=>{
-        videoItem.setAttribute("src" ,"https://node-images-test.s3.eu-west-2.amazonaws.com/Pexels+Videos+2292093.mp4")
+
+    // remove links to improve full screen feeling
+    profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
+    profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
+    
+    videoItem.addEventListener("click",()=>{
+        profileHeader.forEach(item =>{
+            item.classList.toggle("active")
+        })
+        profileLinks.forEach(item =>{
+            item.classList.toggle("active")
+        })
+       
     })
    
 })

@@ -735,6 +735,16 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     transition: all 0.5s ease;
 }
 
+/* REMOVE ALL THE LINKS TO IMPROVE FULL SCREEN */
+/* ////////////POST HEADER////////// */
+.post-container .post .post-header.active,
+.post-container .post .link-container.active{
+    opacity: 0;
+    pointer-events: none;
+
+}
+
+
 /* ////////////// LOGIN MODEL SECTION ////////// */
 
 .login-model-container{
