@@ -8,10 +8,6 @@ const profileImage = document.querySelector("nav >.login")
 if (isLogedIn) {
     profileImage.style.display = "block"
 }
-// const navLoginBtn = document.querySelector(".login button")
-// if (isLogedIn) {
-//     navLoginBtn.style.display = "none"
-// }
 
 // .......side menu button.....
 const loginMenuBtn = document.querySelector(".side-login-btn")
@@ -35,7 +31,7 @@ miniMenuIcon.addEventListener("click",()=>{
 ///////// SIDE MENU SECTION ////////
 //.......toggle side menu it......
 
-const menuItems = document.querySelectorAll(".menu-container .menu .item")
+const menuItems = document.querySelectorAll(".item")
 
 menuItems.forEach(item =>{
 
@@ -58,26 +54,32 @@ menuItems.forEach(item =>{
 
 //......for you icon clicked ......
 
-const forYouBtn = document.querySelector(".for-you")
+const forYouBtn = document.querySelectorAll(".for-you")
 const postContainer = document.querySelector(".post-container")
-forYouBtn.addEventListener("click",()=>{
-    if (isLogedIn) {    
-        postContainer.innerHTML = ""
-    }
+forYouBtn.forEach(item =>{
+    item.addEventListener("click",()=>{
+        if (isLogedIn) {    
+            window.location.href = "https://atutidennis.com/";
+        }
+    })
 })
 
-const followingBtn = document.querySelector(".following")
-followingBtn.addEventListener("click",() =>{
-    if (isLogedIn) {    
-        postContainer.innerHTML = ""
-    }
+const followingBtn = document.querySelectorAll(".following")
+followingBtn.forEach(item =>{
+    item.addEventListener("click",() =>{
+        if (isLogedIn) {    
+            window.location.href = "https://atutidennis.com/";
+        }
+    })
 })
 
-const likedBtn = document.querySelector(".liked")
-likedBtn.addEventListener("click",() =>{
-    if (isLogedIn) {    
-        postContainer.innerHTML = ""
-    }
+const likedBtn = document.querySelectorAll(".liked")
+likedBtn.forEach(item =>{ 
+    item.addEventListener("click",() =>{
+        if (isLogedIn) {    
+            window.location.href = "https://atutidennis.com/";
+        }
+    })
 })
 
 
@@ -121,6 +123,7 @@ videos.forEach(videoItem =>{
     profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
     
     videoItem.addEventListener("click",()=>{
+        console.log("shit");
         profileHeader.forEach(item =>{
             item.classList.toggle("active")
         })
