@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', function() {
+    getVideos ();
+});
+
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = true;
 
@@ -53,6 +57,7 @@ menuItems.forEach(item =>{
 })
 
 //......for you icon clicked ......
+
 
 const forYouBtn = document.querySelectorAll(".for-you")
 const postContainer = document.querySelector(".post-container")
@@ -115,57 +120,60 @@ const observer = new IntersectionObserver(
     }
 )
 
-videos.forEach(videoItem =>{
-    observer.observe(videoItem)
 
-    // remove links to improve full screen feeling
-    profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
-    profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
+function showLoadingIconWhenBuffering() {
+    const videos = document.querySelectorAll(".myVideo");
+    videos.forEach(videoItem =>{
+
+        observer.observe(videoItem)
+
+        profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
+        profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
+        
+        videoItem.addEventListener("click",()=>{
+            profileHeader.forEach(item =>{
+                item.classList.toggle("active")
+            })
+            profileLinks.forEach(item =>{
+                item.classList.toggle("active")
+            })
+           
+        })
+        videoItem.addEventListener("waiting",()=>{
+            videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
     
-    videoItem.addEventListener("click",()=>{
-        console.log("shit");
-        profileHeader.forEach(item =>{
-            item.classList.toggle("active")
         })
-        profileLinks.forEach(item =>{
-            item.classList.toggle("active")
+        videoItem.addEventListener("playing",()=>{
+            videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
         })
+    
        
     })
-    videoItem.addEventListener("waiting",()=>{
-        videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
-
-    })
-    videoItem.addEventListener("playing",()=>{
-        videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
-    })
-
-   
-})
+}
 
 
 
 /////// LINK SECTIION //////
 
-const like = document.querySelector(".like")
-let isLiked = false;
-if (isLogedIn) { 
-    like.classList.remove("open-login-model");
-    like.addEventListener("click",()=>{
-        if (!isLiked) {
-            const counter = parseInt(like.querySelector("span").innerText) 
-            like.querySelector("span").innerText = counter + 1;
-            like.querySelector("i").style.color = "#ffa31a";
-            isLiked = true; 
-        }else{
-            const counter = parseInt(like.querySelector("span").innerText) 
-            like.querySelector("span").innerText = counter - 1;
-            like.querySelector("i").style.color = "#000";
-            isLiked = false
-        }
+// const like = document.querySelector(".like")
+// let isLiked = false;
+// if (isLogedIn) { 
+//     like.classList.remove("open-login-model");
+//     like.addEventListener("click",()=>{
+//         if (!isLiked) {
+//             const counter = parseInt(like.querySelector("span").innerText) 
+//             like.querySelector("span").innerText = counter + 1;
+//             like.querySelector("i").style.color = "#ffa31a";
+//             isLiked = true; 
+//         }else{
+//             const counter = parseInt(like.querySelector("span").innerText) 
+//             like.querySelector("span").innerText = counter - 1;
+//             like.querySelector("i").style.color = "#000";
+//             isLiked = false
+//         }
         
-    })
-}
+//     })
+// }
 
 
 
@@ -303,3 +311,170 @@ const closeModelIcon = document.querySelector(".login-model-close-icon")
 closeModelIcon.addEventListener("click",() =>{
     loginModel.classList.remove("active")
 })
+
+
+// VIDEO API CALL
+
+function getVideos () {
+  let page = 12;
+  fetch(`http://localhost:8080/api/v1/videos/page?page=${page}`)
+  .then(response =>{
+      if (response.ok) {
+        return response.json() 
+    }
+  }).then(data =>{
+      createVideoPost(data.content)
+      showLoadingIconWhenBuffering();
+    }).catch(error =>{
+        console.log(error);
+    })
+}
+
+
+// CREATING A VIDEO POST
+function createVideoPost(videoList) {
+    const videoPostContainer = document.querySelector(".post-container")
+    
+    videoList.forEach(video =>{
+        videoPostContainer.innerHTML += `
+        <div class="post">                         
+            <div class="video-player-container">
+                <div class="player">
+                    <video loop class="myVideo film"  preload="auto" autoplay muted>
+                        <source src="${video.videoLocationUrl}" type="video/mp4">
+                        Your browser does not support this video format
+                    </video>
+                    <div class="loading-icon">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </div>
+
+                </div>                   
+            </div>
+            <div class="post-header">
+                <div class="profile-container">
+                    <div class="profile">
+                        <div class="username">
+                            <p>${video.affiliateName}</p>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="follow-btn open-login-model">
+                            <button>Follow</button>
+                        </div>     
+                    </div>
+
+                </div>
+                <div class="title-container">
+                    ${video.title}
+                </div>
+            </div>  
+            <div class="link-container">
+                <div class="link link-profile">
+                    <div class="image">
+                        <img src="https://robohash.org/dennis" alt="" srcset="">
+                    </div>
+                </div>
+                <div class="link like open-login-model">
+                    <i class="far fa-heart"></i>
+                    <span>${video.userLikes.length}</span>
+                </div>
+                <div class="link comment">
+                    <i class="far fa-comment-alt"></i>
+                    <span>${video.userViews.length}</span>
+                </div>
+                <div class="link share open-login-model">
+                    <i class="far fa-share-square"></i>
+                    <span>${video.userViews.length}</span>
+                </div>
+            </div>
+
+            <div class="comment-container" >
+                <div class="title">167 comments</div>
+                <div class="comment">
+                    <div class="profile-container">
+                        <div class="profile">
+                            <div class="image">
+                                <img src="https://robohash.org/dennis" alt="" srcset="">
+                            </div>
+                            <div class="username">
+                                <p>
+                                    Burak
+                                    <i class="fas fa-check"></i>
+                                </p>
+                                <p>chef</p>
+                            </div>
+                        </div>
+                        <div class="replies-container">
+                            <p>i hope this work</p> 
+                            <span>view replies(11)</span>
+                        </div> 
+                    </div>
+                    <div class="comment-like-container">
+                        <i class="far fa-heart"></i>
+                        <span>234</span> 
+                    </div>
+                </div>    
+                <i class="fas fa-times comment-close-icon"></i>
+                <div class="post-comment-container">
+                    <div class="image">
+                        <img src="https://robohash.org/dennis" alt="" srcset="">
+                    </div>
+                    <input type="text" placeholder="Add comment ...">
+                    <button>
+                        <i class="far fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ad-container">
+                <div class="ad">
+                    <div class="image">
+                        <img src="https://robohash.org/dennis" alt="" srcset="">
+                    </div>
+                    <div class="ad-content-text">
+                        <h2>Best cooking</h2>
+                        <p>Get best cooking</p>
+                        <button>Get Now</button>
+                    </div>
+                </div>
+                <i class="fas fa-times ad-close-icon"></i>
+            </div>  
+    </div> 
+        `
+        
+    })
+
+}
+
+// OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
+function observeLastVideoAndCallApi() {
+    let page = 0
+    const videos = document.querySelectorAll(".myVideo");
+
+    const observer = new IntersectionObserver(
+        entries =>{
+            entries.forEach(entry =>{
+
+                if (entry.target.classList.contains("film")) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.play()
+
+                    }else{
+
+                        entry.target.pause()
+                    }
+                    
+                }
+            })
+        },{
+            root: null,
+            rootMargin:"0px",
+            threshold: 0
+        }
+    )
+    videos.forEach(video =>{
+        observer.observe(video)
+    })
+
+}

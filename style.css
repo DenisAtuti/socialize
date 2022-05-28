@@ -429,20 +429,21 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 .post-container .post .profile-container .profile .follow-btn button{
     padding: 0.5rem 2rem;
     font-size: 1.5rem;
-    color: var(--primary-color);
-    border: solid 0.2rem var(--primary-color);
+    color: rgba(255, 163, 26, 0.5);
+    border: solid 0.2rem rgba(255, 163, 26, 0.5);
     background-color: transparent;
     border-radius: 0.5rem;
     cursor: pointer;
+    font-family: inherit;
 }
 .post-container .post .profile-container .follow-btn button:hover{
     background: linear-gradient(rgba(255, 163, 26, 0.1), rgba(255, 163, 26, 0.1));
 }
 
 .post-container .post .profile-container .follow-btn button.active{
-    color:var(--icon-color);
-    border: solid 0.2rem var(--icon-color);
-    background-color: var(--accent-color);
+    color:var(--light-gey);
+    border: solid 0.2rem var(--light-gey);
+    background-color: transparent;
 }
 .post-container .post .profile-container .follow-btn button.active:hover{
     background: linear-gradient(rgba(241, 241, 242, 0.1), rgba(241, 241, 242, 0.1));
@@ -986,6 +987,10 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     nav .search i:hover{ 
         background: transparent;
        
+    }
+    nav .login .profile-image{
+        background-color: transparent;
+        border:solid 0.1rem rgba(255, 163, 26, 0.3);
     }
     
     nav .login button{
