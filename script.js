@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 20
+let page = 1
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
