@@ -480,6 +480,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     position: relative;
 }
 .post-container .post .video-player-container .player video{
+    object-fit: cover;
     max-height: 100%;
     max-width: auto;
     z-index: 0;

@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
+let page = 20
+
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = true;
+const isLogedIn = false;
 
 /////// IF LOGEDIN ////
 
@@ -93,39 +95,42 @@ likedBtn.forEach(item =>{
 
 //.......auto play as soon as it visible
 
+function observeVideoPost() {
+    const posts = document.querySelectorAll(".post");
 
-const videos = document.querySelectorAll(".myVideo");
-
-const observer = new IntersectionObserver(
-    entries =>{
-        entries.forEach(entry =>{
-
-            if (entry.target.classList.contains("film")) {
-
-                if (entry.isIntersecting) {
-
-                    entry.target.play()
-
-                }else{
-
-                    entry.target.pause()
-                }
+    const observer = new IntersectionObserver(
+        entries =>{
+            entries.forEach(entry =>{
+                const video = entry.target.querySelector(".video-player-container > .player > video")
+                const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
                 
-            }
-        })
-    },{
-        root: null,
-        rootMargin:"0px",
-        threshold: 0
-    }
-)
+                if (entry.isIntersecting) {
+                    video.play()
+                    entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
+                    console.log(viewCount);
+                
+                }else{
+                    video.pause()
+                }
+            })
+        },{
+            root: null,
+            rootMargin:"0px",
+            threshold: 0
+        }
+    )
+
+    posts.forEach(post =>{
+        observer.observe(post)
+    })
+
+    
+}
 
 
 function showLoadingIconWhenBuffering() {
     const videos = document.querySelectorAll(".myVideo");
     videos.forEach(videoItem =>{
-
-        observer.observe(videoItem)
 
         profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
         profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
@@ -155,122 +160,142 @@ function showLoadingIconWhenBuffering() {
 
 /////// LINK SECTIION //////
 
-// const like = document.querySelector(".like")
-// let isLiked = false;
-// if (isLogedIn) { 
-//     like.classList.remove("open-login-model");
-//     like.addEventListener("click",()=>{
-//         if (!isLiked) {
-//             const counter = parseInt(like.querySelector("span").innerText) 
-//             like.querySelector("span").innerText = counter + 1;
-//             like.querySelector("i").style.color = "#ffa31a";
-//             isLiked = true; 
-//         }else{
-//             const counter = parseInt(like.querySelector("span").innerText) 
-//             like.querySelector("span").innerText = counter - 1;
-//             like.querySelector("i").style.color = "#000";
-//             isLiked = false
-//         }
-        
-//     })
-// }
+function increamentLikes() {
+    const likeIcons = document.querySelectorAll(".like")
+    likeIcons.forEach(icon =>{
+
+        if (isLogedIn) { 
+            icon.classList.remove("open-login-model");
+            icon.addEventListener("click",()=>{
+                if (!icon.classList.contains("active")) {
+                    const counter = parseInt(icon.querySelector("span").innerText) 
+                    icon.querySelector("span").innerText = counter + 1;
+                    icon.querySelector("i").style.color = "#ffa31a";
+                    icon.classList.add("active")
+                }else{
+                    const countertwo = parseInt(icon.querySelector("span").innerText) 
+                    icon.querySelector("span").innerText = countertwo - 1;
+                    icon.querySelector("i").style.color = "#D3D3D3";
+                    icon.classList.remove("active");
+                }
+                
+            })
+        }
+
+    })
+    
+
+}
 
 
 
 ///////// AD SECTION /////////
 
 //........close ad banner on click......
-const adIcons = document.querySelectorAll(".ad-close-icon")
-adIcons.forEach(adIcon =>{
-    adIcon.addEventListener("click",()=>{
-        adIcon.parentElement.style.display = "none";
-        // window.open("https://github.com/DenisAtuti/overload-main") 
-    })
-})
-
-///// DISPLAY ADD WHEN ITS VISIBLE /////
-const ads = document.querySelectorAll(".ad-container");
-
-const adObserver = new IntersectionObserver(
-    entries =>{
-        entries.forEach(entry =>{
-
-            if (entry.target.classList.contains("ad-container")) {
-
-                if (entry.isIntersecting) {
-
-                   entry.target.classList.add("active")
-
-                }else{
-
-                    entry.target.classList.remove("active")
-                }
-                
-            }
+function clickAdCloseIcon() {
+    const adIcons = document.querySelectorAll(".ad-close-icon")
+    adIcons.forEach(adIcon =>{
+        adIcon.addEventListener("click",()=>{
+            adIcon.parentElement.style.display = "none";
         })
-    },{
-        root: null,
-        rootMargin:"0px",
-        threshold: 0
-    }
-)
+    })
+}
+///// DISPLAY ADD WHEN ITS VISIBLE /////
+function displayAds() {
+    const ads = document.querySelectorAll(".ad-container");
 
-ads.forEach(ad =>{
-    adObserver.observe(ad);
-})
+    const adObserver = new IntersectionObserver(
+        entries =>{
+            entries.forEach(entry =>{
+
+                if (entry.target.classList.contains("ad-container")) {
+
+                    if (entry.isIntersecting) {
+
+                    entry.target.classList.add("active")
+
+                    }else{
+
+                        entry.target.classList.remove("active")
+                    }
+                    
+                }
+            })
+        },{
+            root: null,
+            rootMargin:"0px",
+            threshold: 0
+        }
+    )
+
+    ads.forEach(ad =>{
+        adObserver.observe(ad);
+    })
+
+    clickAdCloseIcon();
+}
+
 
 /////////// COMMENT SECTION /////////
 
 
 //.......disable sent button if not loged in ......
-const commentPostBtns = document.querySelectorAll(".post-comment-container > button")
-if (!isLogedIn) {
-    commentPostBtns.forEach(bts =>{
-        bts.disabled = true;
-        bts.style.cursor = "not-allowed";
-    })
+function disbleSentButton() {
+    const commentPostBtns = document.querySelectorAll(".post-comment-container > button")
+    if (!isLogedIn) {
+        commentPostBtns.forEach(bts =>{
+            bts.disabled = true;
+            bts.style.cursor = "not-allowed";
+        })
+    }
 }
 
+
 //....... open comment model .....
+function openCommentModel() {
+    const commentOpenIcons = document.querySelectorAll(".comment-icon");
 
-const commentOpenIcons = document.querySelectorAll(".comment");
-
-commentOpenIcons.forEach(commentOpenIcon =>{
-    commentOpenIcon.addEventListener("click",() =>{
-        const post = commentOpenIcon.parentElement.parentElement.parentElement.querySelector(".comment-container");
-        post.classList.add("active");
-    })
-})
-
-const commentCloseIcon = document.querySelectorAll(".comment-close-icon")
-commentCloseIcon.forEach(commentContainer =>{
-
-    commentContainer.addEventListener("click",()=>{
-        commentContainer.parentElement.classList.remove("active")
-    })
-})
-
-///////////// FOLLOW BUTTON //////////
-const followBtns = document.querySelectorAll(".follow-btn")
-if (isLogedIn) {
-
-    followBtns.forEach(btn =>{
-        btn.classList.remove("open-login-model");
-        btn.addEventListener("click",()=>{
-            const button = btn.querySelector("button");
-            button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-            setTimeout(() => {
-                if (button.classList.contains("active")) {
-                    button.innerHTML = 'Follow';
-                    button.classList.remove("active")            
-                }else{
-                    button.innerHTML = 'Following';
-                    button.classList.add("active") 
-                }
-            }, 2000);
-            
+    commentOpenIcons.forEach(commentOpenIcon =>{
+        commentOpenIcon.addEventListener("click",() =>{
+            const post = commentOpenIcon.parentElement.parentElement.querySelector(".comment-container");
+            post.classList.add("active");
         })
     })
+
+    const commentCloseIcon = document.querySelectorAll(".comment-close-icon")
+    commentCloseIcon.forEach(commentContainer =>{
+
+        commentContainer.addEventListener("click",()=>{
+            commentContainer.parentElement.classList.remove("active")
+        })
+    })
+    
+}
+
+///////////// FOLLOW BUTTON //////////
+function followBtnClicked() {
+    const followBtns = document.querySelectorAll(".follow-btn")
+    if (isLogedIn) {
+
+        followBtns.forEach(btn =>{
+            btn.classList.remove("open-login-model");
+            btn.addEventListener("click",()=>{
+                const button = btn.querySelector("button");
+                button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+                setTimeout(() => {
+                    if (button.classList.contains("active")) {
+                        button.innerHTML = 'Follow';
+                        button.classList.remove("active")            
+                    }else{
+                        button.innerHTML = 'Following';
+                        button.classList.add("active") 
+                    }
+                }, 2000);
+                
+            })
+        })
+    }
+
 }
 
 
@@ -294,30 +319,34 @@ inputs.forEach(input =>{
 })
 
 //...... open login model .....
-const loginModel = document.querySelector(".login-model-container")
-const loginItems = document.querySelectorAll(".open-login-model")
+function openCloseLoginModel() {
+    const loginModel = document.querySelector(".login-model-container")
+    const loginItems = document.querySelectorAll(".open-login-model")
 
-loginItems.forEach(item =>{
-    item.addEventListener("click",()=>{
-        loginModel.classList.add("active")
+    loginItems.forEach(item =>{
+        item.addEventListener("click",()=>{
+            loginModel.classList.add("active")
+        })
     })
-})
 
 
-//........ close login model .......
+    //........ close login model .......
 
-const closeModelIcon = document.querySelector(".login-model-close-icon")
+    const closeModelIcon = document.querySelector(".login-model-close-icon")
 
-closeModelIcon.addEventListener("click",() =>{
-    loginModel.classList.remove("active")
-})
+    closeModelIcon.addEventListener("click",() =>{
+        loginModel.classList.remove("active")
+    })
+
+}
+
 
 
 // VIDEO API CALL
 
 function getVideos () {
-  let page = 12;
-  fetch(`http://localhost:8080/api/v1/videos/page?page=${page}`)
+
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -325,9 +354,18 @@ function getVideos () {
   }).then(data =>{
       createVideoPost(data.content)
       showLoadingIconWhenBuffering();
+      displayAds()
+      increamentLikes()
+      openCommentModel()
+      disbleSentButton()
+      followBtnClicked()
+      openCloseLoginModel()
+      observeVideoPost();
+      observeLastVideoAndCallApi()
     }).catch(error =>{
         console.log(error);
     })
+    
 }
 
 
@@ -336,12 +374,12 @@ function createVideoPost(videoList) {
     const videoPostContainer = document.querySelector(".post-container")
     
     videoList.forEach(video =>{
-        videoPostContainer.innerHTML += `
+        videoPostContainer.insertAdjacentHTML('beforeEnd',`
         <div class="post">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo film"  preload="auto" autoplay muted>
-                        <source src="${video.videoLocationUrl}" type="video/mp4">
+                    <video loop class="myVideo film"  preload="none">
+                        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4">
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
@@ -374,16 +412,20 @@ function createVideoPost(videoList) {
                     </div>
                 </div>
                 <div class="link like open-login-model">
-                    <i class="far fa-heart"></i>
+                <i class="far fa-heart"></i>
+                <span>${video.userLikes.length}</span>
+                </div>
+                <div class="link view">
+                    <i class="far fa-play-circle"></i>
                     <span>${video.userLikes.length}</span>
                 </div>
-                <div class="link comment">
+                <div class="link comment comment-icon">
                     <i class="far fa-comment-alt"></i>
                     <span>${video.userViews.length}</span>
                 </div>
                 <div class="link share open-login-model">
                     <i class="far fa-share-square"></i>
-                    <span>${video.userViews.length}</span>
+                    <span>${video.posts.length}</span>
                 </div>
             </div>
 
@@ -439,7 +481,7 @@ function createVideoPost(videoList) {
                 <i class="fas fa-times ad-close-icon"></i>
             </div>  
     </div> 
-        `
+        `)
         
     })
 
@@ -447,34 +489,46 @@ function createVideoPost(videoList) {
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
 function observeLastVideoAndCallApi() {
-    let page = 0
-    const videos = document.querySelectorAll(".myVideo");
-
     const observer = new IntersectionObserver(
         entries =>{
-            entries.forEach(entry =>{
-
-                if (entry.target.classList.contains("film")) {
-
-                    if (entry.isIntersecting) {
-
-                        entry.target.play()
-
-                    }else{
-
-                        entry.target.pause()
-                    }
-                    
-                }
-            })
+            const lastPost = entries[0]
+            if (lastPost.isIntersecting) {
+                console.log("intersecting");
+                getMorePost()
+                page ++;
+                console.log(page);
+                observer.unobserve(lastPost.target)
+            }
         },{
             root: null,
-            rootMargin:"0px",
+            rootMargin:"100px",
             threshold: 0
         }
     )
-    videos.forEach(video =>{
-        observer.observe(video)
-    })
 
+    observer.observe(document.querySelector(".post:last-child"))
+
+}
+
+function getMorePost() {
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
+  .then(response =>{
+      if (response.ok) {
+        return response.json() 
+    }
+  }).then(data =>{
+      createVideoPost(data.content)
+      showLoadingIconWhenBuffering();
+      displayAds()
+      increamentLikes()
+      openCommentModel()
+      disbleSentButton()
+      followBtnClicked()
+      openCloseLoginModel()
+      observeVideoPost();
+      observeLastVideoAndCallApi()
+    }).catch(error =>{
+        console.log(error);
+    })
+    
 }
