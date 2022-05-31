@@ -111,6 +111,7 @@ function observeVideoPost() {
                 
                 }else{
                     video.pause()
+                    video.load()
                 }
             })
         },{

@@ -74,6 +74,11 @@ nav .search input.search-input:focus::-webkit-search-cancel-button{
     opacity: 0.5;
     pointer-events: all;
 }
+nav .search button{
+    border: none;
+    outline: none;
+    background: transparent;
+}
 
 nav .search i{
     font-size: 2rem;
