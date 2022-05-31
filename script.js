@@ -105,12 +105,13 @@ function observeVideoPost() {
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
                 
                 if (entry.isIntersecting) {
-                    video.play()
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
+                    video.play();
                     console.log(viewCount);
+                    observer.unobserve(entry.target)
                 
                 }else{
-                    // video.pause()
+                    video.pause()
                     // video.load()
                 }
             })
