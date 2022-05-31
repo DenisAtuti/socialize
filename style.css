@@ -483,16 +483,17 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     position: absolute;
     top: 0;
     left: 0;
+    position: relative;
     height: 100%;
-    width: 100%;
+    width: 100;
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
-    min-height: 100%;
-    min-width: auto;
-    /* overflow: hidden; */
+    max-height: 100%;
+    max-width: auto;
+    overflow: hidden;
     z-index: 0;
-    /* border: solid 2rem green; */
+    border: none;
 }
 .post-container .post .video-player-container .player video::-webkit-media-controls, 
 .post-container .post .video-player-container .player video::-moz-media-controls, 
