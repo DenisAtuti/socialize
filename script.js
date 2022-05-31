@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 20
+let page = 1
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
@@ -103,12 +103,20 @@ function observeVideoPost() {
             entries.forEach(entry =>{
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
+                const videoId = entry.target.dataset.target
+               
                 
                 if (entry.isIntersecting) {
+                    addViewCount(videoId)
+
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
+                    
                     video.play();
-                    console.log(viewCount);
+
+                    console.log(videoId);
+
                     observer.unobserve(entry.target)
+
                 
                 }else{
                     video.pause()
@@ -299,6 +307,18 @@ function followBtnClicked() {
 
 }
 
+function addViewCount(videoId) {
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`)
+    .then(response =>{
+        if (response.ok) {
+            return response.json() 
+        }
+    }).then(data =>{
+        console.log(data);
+    })
+          
+    
+}
 
 /////////   LOGIN SECTION /////
 
@@ -376,10 +396,10 @@ function createVideoPost(videoList) {
     
     videoList.forEach(video =>{
         videoPostContainer.insertAdjacentHTML('beforeEnd',`
-        <div class="post">                         
+        <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo video-js film"  preload="none" autoplay muted data-setup="{}">
+                    <video loop class="myVideo video-js film"  preload="none" autoplay muted data-setup="{}" >
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
@@ -418,7 +438,7 @@ function createVideoPost(videoList) {
                 </div>
                 <div class="link view">
                     <i class="far fa-play-circle"></i>
-                    <span>${video.userLikes.length}</span>
+                    <span>${video.viewsCount}</span>
                 </div>
                 <div class="link comment comment-icon">
                     <i class="far fa-comment-alt"></i>
@@ -494,16 +514,18 @@ function observeLastVideoAndCallApi() {
         entries =>{
             const lastPost = entries[0]
             const video = lastPost.target.querySelector(".video-player-container > .player > video")
-            if (lastPost.isIntersecting && video.readyState >= 2) {
+            if (lastPost.isIntersecting ) {
                 console.log("intersecting");
-                console.log(video.readyState);
-                getMorePost()
-                page ++;
-                console.log(page);
-                observer.unobserve(lastPost.target)
+                if (video.readyState >= 2) {
+                    console.log(video.readyState);
+                    getMorePost()
+                    page ++;
+                    console.log(page);
+                    observer.unobserve(lastPost.target) 
+                }
+               
             }
             else{
-                video.play()
                 return
             }
         },{

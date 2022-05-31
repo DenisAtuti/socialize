@@ -81,6 +81,7 @@ nav .search button{
 }
 
 nav .search i{
+    color: var(--accent-color);
     font-size: 2rem;
     padding: 2rem;
     cursor: pointer;
