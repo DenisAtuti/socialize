@@ -488,9 +488,9 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
-    height: 100%;
-    width: auto;
-    overflow: hidden;
+    min-height: 100%;
+    min-width: auto;
+    /* overflow: hidden; */
     z-index: 0;
     /* border: solid 2rem green; */
 }
