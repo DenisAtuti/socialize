@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 1
+let page = 20
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
@@ -100,7 +100,6 @@ function observeVideoPost() {
 
     const observer = new IntersectionObserver(
         entries =>{
-            // entries[0].target.querySelector(".video-player-container > .player > video").play()
             entries.forEach(entry =>{
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
@@ -494,12 +493,18 @@ function observeLastVideoAndCallApi() {
     const observer = new IntersectionObserver(
         entries =>{
             const lastPost = entries[0]
-            if (lastPost.isIntersecting) {
+            const video = lastPost.target.querySelector(".video-player-container > .player > video")
+            if (lastPost.isIntersecting && video.readyState >= 2) {
                 console.log("intersecting");
+                console.log(video.readyState);
                 getMorePost()
                 page ++;
                 console.log(page);
                 observer.unobserve(lastPost.target)
+            }
+            else{
+                video.play()
+                return
             }
         },{
             root: null,

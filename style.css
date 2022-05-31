@@ -485,7 +485,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     left: 0;
     position: relative;
     height: 100%;
-    width: 100;
+    width: 100%;
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
