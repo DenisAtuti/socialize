@@ -488,8 +488,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
-    /* max-height: 100%; */
-    /* max-width: 100%; */
+    height: 100%;
+    width: auto;
     overflow: hidden;
     z-index: 0;
     /* border: solid 2rem green; */
