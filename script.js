@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 1
+let page = 40
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
@@ -110,8 +110,8 @@ function observeVideoPost() {
                     console.log(viewCount);
                 
                 }else{
-                    video.pause()
-                    video.load()
+                    // video.pause()
+                    // video.load()
                 }
             })
         },{
@@ -379,7 +379,7 @@ function createVideoPost(videoList) {
         <div class="post">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo film"  preload="none">
+                    <video loop class="myVideo video-js film"  preload="auto" data-setup="{}">
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
