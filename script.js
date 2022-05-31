@@ -100,6 +100,7 @@ function observeVideoPost() {
 
     const observer = new IntersectionObserver(
         entries =>{
+            // entries[0].target.querySelector(".video-player-container > .player > video").play()
             entries.forEach(entry =>{
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
@@ -112,7 +113,6 @@ function observeVideoPost() {
                 
                 }else{
                     video.pause()
-                    // video.load()
                 }
             })
         },{
@@ -380,7 +380,7 @@ function createVideoPost(videoList) {
         <div class="post">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo video-js film"  preload="auto" data-setup="{}">
+                    <video loop class="myVideo video-js film"  preload="none" autoplay muted data-setup="{}">
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>

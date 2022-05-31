@@ -476,19 +476,23 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     position: relative;
 }
 .post-container .post .video-player-container .player{
-    max-height: 100%;
-    max-width: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
-    max-height: 100%;
-    max-width: auto;
+    /* max-height: 100%; */
+    /* max-width: 100%; */
+    overflow: hidden;
     z-index: 0;
+    /* border: solid 2rem green; */
 }
 .post-container .post .video-player-container .player video::-webkit-media-controls, 
 .post-container .post .video-player-container .player video::-moz-media-controls, 
