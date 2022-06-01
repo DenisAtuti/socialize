@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 1
+let page = 20
+let toggleLinksAndHeaderTitle = true;
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
@@ -139,20 +140,44 @@ function observeVideoPost() {
 
 function showLoadingIconWhenBuffering() {
     const videos = document.querySelectorAll(".myVideo");
-    videos.forEach(videoItem =>{
+    const posts = document.querySelectorAll(".video-player-container");
 
+    posts.forEach(post =>{
         profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
         profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
-        
-        videoItem.addEventListener("click",()=>{
+        // if (toggleLinksAndHeaderTitle) {
+        //     profileLinks.forEach(link =>{
+        //         link.classList.add("active")
+        //     })
+        // }
+        post.addEventListener("click",()=>{
             profileHeader.forEach(item =>{
                 item.classList.toggle("active")
+                // if (toggleLinksAndHeaderTitle) {
+                //     console.log(toggleLinksAndHeaderTitle);
+                //     item.classList.add("active")
+                //     toggleLinksAndHeaderTitle = false;
+                // }else{
+                //     item.classList.remove("active")
+                //     toggleLinksAndHeaderTitle = true;
+                // }
+                // item.classList.toggle("active")
+                // if ( item.classList.contains("active")) {
+                //     toggleLinksAndHeaderTitle = true;
+                // }
             })
             profileLinks.forEach(item =>{
                 item.classList.toggle("active")
+                // if ( item.classList.contains("active")) {
+                //     toggleLinksAndHeaderTitle = true;
+                // }
             })
            
         })
+    })
+
+    videos.forEach(videoItem =>{
+
         videoItem.addEventListener("waiting",()=>{
             videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
     
@@ -308,13 +333,8 @@ function followBtnClicked() {
 }
 
 function addViewCount(videoId) {
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`)
-    .then(response =>{
-        if (response.ok) {
-            return response.json() 
-        }
-    }).then(data =>{
-        console.log(data);
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
+        method: 'POST'
     })
           
     
@@ -399,7 +419,7 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo video-js film"  preload="none" autoplay muted data-setup="{}" >
+                    <video loop class="myVideo film"  preload="none" autoplay muted data-setup="{}" >
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
