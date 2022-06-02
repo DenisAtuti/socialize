@@ -108,24 +108,15 @@ function observeVideoPost() {
                 
                 if (entry.isIntersecting) {
                     addViewCount(videoId)
-
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    
-                    video.play();
-
-                    console.log(videoId);
-
-                    observer.unobserve(entry.target)
-
-                
-                }else{
-                    video.pause()
+                    video.currentTime = 0
+                    video.play();             
                 }
             })
         },{
             root: null,
             rootMargin:"0px",
-            threshold: 0
+            threshold: 1
         }
     )
 
@@ -404,7 +395,7 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo film"  preload="none" autoplay muted>
+                    <video loop class="myVideo film"  preload="auto" muted>
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
@@ -516,7 +507,7 @@ function createVideoPost(videoList) {
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
 function observeLastVideoAndCallApi() {
   
-
+    const postContainer = document.querySelector(".post-container")
     const lastThreeVideoPosts = document.querySelectorAll(".post:nth-last-child(-n+3)")
 
     const observer = new IntersectionObserver(
@@ -525,11 +516,22 @@ function observeLastVideoAndCallApi() {
             entries.forEach(entry =>{
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                
-                if (video.readyState >= 4) {
-                    getMorePost()
+                if (video.readyState === 4) {
+                    // getMorePost()
+                    observer.unobserve(entry.target)
+                }
+                if (entry.isIntersecting) {
+                    console.log(entries.length);
+                }
+            })
+
+            postContainer.addEventListener("scroll",()=>{
+                if (entries.length === 1) {
+                     getMorePost()
                     console.log("calling more troops");
                 }
             })
+            
 
         },{
             root: null,
