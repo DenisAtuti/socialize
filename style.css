@@ -484,6 +484,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     position: relative;
     height: 100%;
     width: 100%;
+    text-align: center;
 }
 .post-container .post .video-player-container .player video{
     object-fit: cover;
@@ -719,6 +720,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     margin-top: -20rem;
     opacity: 0;
     transition: opacity 1.5s ease;
+    display: none;
 }
 .post-container .post .ad-container.active{
     opacity: 1;

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 let page = 1
-let toggleLinksAndHeaderTitle = true;
 
 /////// UNIVERSAL SECTIION //////
 const isLogedIn = false;
@@ -97,7 +96,7 @@ likedBtn.forEach(item =>{
 //.......auto play as soon as it visible
 
 function observeVideoPost() {
-    const posts = document.querySelectorAll(".post");
+    const posts = document.querySelectorAll(".post:nth-last-child(-n+10)");
 
     const observer = new IntersectionObserver(
         entries =>{
@@ -137,44 +136,21 @@ function observeVideoPost() {
     
 }
 
+function displayVideoLinks() {
+    const allPosts = document.querySelectorAll(".video-player-container");
+    allPosts.forEach(post =>{
+        post.addEventListener("click",() =>{
+            post.parentElement.querySelector(".post-header").classList.toggle("active")
+            post.parentElement.querySelector(".link-container").classList.toggle("active")
+        })
+    })
+   
+}
+
 
 function showLoadingIconWhenBuffering() {
     const videos = document.querySelectorAll(".myVideo");
-    const posts = document.querySelectorAll(".video-player-container");
-
-    posts.forEach(post =>{
-        profileHeader = document.querySelectorAll(".post-container > .post > .post-header")
-        profileLinks = document.querySelectorAll(".post-container > .post >.link-container")
-        // if (toggleLinksAndHeaderTitle) {
-        //     profileLinks.forEach(link =>{
-        //         link.classList.add("active")
-        //     })
-        // }
-        post.addEventListener("click",()=>{
-            profileHeader.forEach(item =>{
-                item.classList.toggle("active")
-                // if (toggleLinksAndHeaderTitle) {
-                //     console.log(toggleLinksAndHeaderTitle);
-                //     item.classList.add("active")
-                //     toggleLinksAndHeaderTitle = false;
-                // }else{
-                //     item.classList.remove("active")
-                //     toggleLinksAndHeaderTitle = true;
-                // }
-                // item.classList.toggle("active")
-                // if ( item.classList.contains("active")) {
-                //     toggleLinksAndHeaderTitle = true;
-                // }
-            })
-            profileLinks.forEach(item =>{
-                item.classList.toggle("active")
-                // if ( item.classList.contains("active")) {
-                //     toggleLinksAndHeaderTitle = true;
-                // }
-            })
-           
-        })
-    })
+    
 
     videos.forEach(videoItem =>{
 
@@ -395,6 +371,7 @@ function getVideos () {
   }).then(data =>{
       createVideoPost(data.content)
       showLoadingIconWhenBuffering();
+      displayVideoLinks()
       displayAds()
       increamentLikes()
       openCommentModel()
@@ -537,11 +514,8 @@ function observeLastVideoAndCallApi() {
             if (lastPost.isIntersecting ) {
                 console.log("intersecting");
                 if (video.readyState >= 2) {
-                    console.log(video.readyState);
                     getMorePost()
                     page ++;
-                    console.log(page);
-                    observer.unobserve(lastPost.target) 
                 }
                
             }
@@ -563,11 +537,13 @@ function getMorePost() {
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
+        toggleLinksAndHeaderTitle = false;
         return response.json() 
     }
   }).then(data =>{
       createVideoPost(data.content)
       showLoadingIconWhenBuffering();
+      displayVideoLinks()
       displayAds()
       increamentLikes()
       openCommentModel()
