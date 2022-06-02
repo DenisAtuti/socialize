@@ -357,13 +357,21 @@ function openCloseLoginModel() {
 
 }
 
-
+// generating random page numbers numbers
+function generateRandomPageNumber(pageSize){
+    let rand = Math.random() * pageSize;
+    rand = Math.floor(rand); // 99
+  
+    return rand;
+}
 
 // VIDEO API CALL
 
 function getVideos () {
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page`)
+    const page = generateRandomPageNumber(537)
+
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -507,33 +515,36 @@ function createVideoPost(videoList) {
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
 function observeLastVideoAndCallApi() {
+    const lastThreeVideoPosts = document.querySelectorAll(".post:nth-last-child(-n+3)")
+
     const observer = new IntersectionObserver(
         entries =>{
-            const lastPost = entries[0]
-            const video = lastPost.target.querySelector(".video-player-container > .player > video")
-            if (lastPost.isIntersecting ) {
-                console.log("intersecting");
-                if (video.readyState >= 2) {
-                    getMorePost()
-                    page ++;
-                }
+
+            entries.forEach(entry =>{
+                const video = entry.target.querySelector(".video-player-container > .player > video")
                
-            }
-            else{
-                return
-            }
+                if (video.readyState >= 4) {
+                    getMorePost()
+                    console.log("calling more troops");
+                }
+            })
+
         },{
             root: null,
             rootMargin:"100px",
             threshold: 0
         }
     )
-
-    observer.observe(document.querySelector(".post:last-child"))
+    
+    lastThreeVideoPosts.forEach(videoPost =>{
+        observer.observe(videoPost)
+    })
 
 }
 
 function getMorePost() {
+    const page = generateRandomPageNumber(537)
+
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
