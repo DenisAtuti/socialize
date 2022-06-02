@@ -369,7 +369,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(537)
+    const page = generateRandomPageNumber(31)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -515,6 +515,8 @@ function createVideoPost(videoList) {
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
 function observeLastVideoAndCallApi() {
+  
+
     const lastThreeVideoPosts = document.querySelectorAll(".post:nth-last-child(-n+3)")
 
     const observer = new IntersectionObserver(
@@ -543,7 +545,7 @@ function observeLastVideoAndCallApi() {
 }
 
 function getMorePost() {
-    const page = generateRandomPageNumber(537)
+    const page = generateRandomPageNumber(31)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
