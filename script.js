@@ -508,42 +508,28 @@ function createVideoPost(videoList) {
 function observeLastVideoAndCallApi() {
   
     const postContainer = document.querySelector(".post-container")
-    const lastThreeVideoPosts = document.querySelectorAll(".post:nth-last-child(-n+3)")
+    const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
 
-    const observer = new IntersectionObserver(
-        entries =>{
+    console.log(postContainer);
+    postContainer.addEventListener("scroll",()=>{
+        if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+        const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
-            entries.forEach(entry =>{
-                const video = entry.target.querySelector(".video-player-container > .player > video")
-               
-                if (video.readyState === 4) {
-                    // getMorePost()
-                    observer.unobserve(entry.target)
-                }
-                if (entry.isIntersecting) {
-                    console.log(entries.length);
-                }
-            })
-
-            postContainer.addEventListener("scroll",()=>{
-                if (entries.length === 1) {
-                     getMorePost()
-                    console.log("calling more troops");
-                }
-            })
-            
-
-        },{
-            root: null,
-            rootMargin:"100px",
-            threshold: 0
+        function isThisVideoLoaded(video) {
+            return video.readyState >= 3;
         }
-    )
-    
-    lastThreeVideoPosts.forEach(videoPost =>{
-        observer.observe(videoPost)
+
+        if (isAllVideoLoaded) {
+            console.log("calling more troops");
+            getMorePost()
+        }
+         
+        } 
     })
 
+
+
+ 
 }
 
 function getMorePost() {

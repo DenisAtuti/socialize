@@ -356,7 +356,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 .container .post-container{
     overflow-y: auto;
     scroll-snap-type: block mandatory;
-    height: 100vh;
+    /* height: 100vh; */
     max-width: 50%;
     
 }
