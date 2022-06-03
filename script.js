@@ -367,7 +367,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(850)
+    const page = generateRandomPageNumber(30)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -539,7 +539,7 @@ function observeLastVideoAndCallApi() {
                     getMorePost()
                 }
                  
-                } 
+            } 
 
         }, 1000);
 
@@ -552,7 +552,7 @@ function observeLastVideoAndCallApi() {
 }
 
 function getMorePost() {
-    const page = generateRandomPageNumber(850)
+    const page = generateRandomPageNumber(30)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
