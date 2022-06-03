@@ -543,7 +543,7 @@ function observeLastVideoAndCallApi() {
 
                 loadtime = loadtime + 100
 
-        }, 00 + loadtime);
+        }, 800 + loadtime);
 
         
     },false)
