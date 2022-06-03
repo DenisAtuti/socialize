@@ -512,6 +512,7 @@ function createVideoPost(videoList) {
 }
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
+let loadtime = 0
 function observeLastVideoAndCallApi() {
   
     const postContainer = document.querySelector(".post-container")
@@ -519,7 +520,7 @@ function observeLastVideoAndCallApi() {
 
     console.log(postContainer);
     let timer = null;
-    let loadtime = 0
+   
     postContainer.addEventListener("scroll",()=>{
 
         if(timer !== null) {
