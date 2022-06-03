@@ -8,7 +8,7 @@
 
 html {
     font-size: 50.5%;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; */
 }
 
 :root{
