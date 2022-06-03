@@ -527,9 +527,11 @@ function observeLastVideoAndCallApi() {
         }
         timer = setTimeout(function() {
 
+
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+
+                
                 const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
-        
                 function isThisVideoLoaded(video) {
                     return video.readyState === 4;
                 }
@@ -541,7 +543,7 @@ function observeLastVideoAndCallApi() {
                  
             } 
 
-        }, 1000);
+        }, 150);
 
         
     },false)
