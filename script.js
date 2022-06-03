@@ -109,7 +109,14 @@ function observeVideoPost() {
                 if (entry.isIntersecting) {
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    video.currentTime = 0
+                    if (typeof video.loop == 'boolean') { // loop supported
+                        video.loop = true;
+                      } else { // loop property not supported
+                        video.addEventListener('ended', function () {
+                          this.currentTime = 0;
+                          this.play();
+                        }, false);
+                      }
                     video.play();             
                 }
             })
@@ -360,7 +367,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(31)
+    const page = generateRandomPageNumber(850)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -395,7 +402,7 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video loop class="myVideo film"  preload="auto" autoplay muted>
+                    <video class="myVideo film"  preload="auto" autoplay muted>
                         <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
@@ -511,21 +518,35 @@ function observeLastVideoAndCallApi() {
     const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
 
     console.log(postContainer);
+    let timer = null;
+    let loadtime = 0
     postContainer.addEventListener("scroll",()=>{
-        if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-        const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
-        function isThisVideoLoaded(video) {
-            return video.readyState >= 3;
+        if(timer !== null) {
+            clearTimeout(timer);        
         }
+        timer = setTimeout(function() {
 
-        if (isAllVideoLoaded) {
-            console.log("calling more troops");
-            getMorePost()
-        }
-         
-        } 
-    })
+            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+                const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
+        
+                function isThisVideoLoaded(video) {
+                    return video.readyState === 4;
+                }
+        
+                if (isAllVideoLoaded) {
+                    console.log("calling more troops");
+                    getMorePost()
+                }
+                 
+                } 
+
+                loadtime = loadtime + 500
+
+        }, 1000 + loadtime);
+
+        
+    },false)
 
 
 
@@ -533,7 +554,7 @@ function observeLastVideoAndCallApi() {
 }
 
 function getMorePost() {
-    const page = generateRandomPageNumber(31)
+    const page = generateRandomPageNumber(850)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
