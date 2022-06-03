@@ -541,9 +541,9 @@ function observeLastVideoAndCallApi() {
                  
                 } 
 
-                loadtime = loadtime + 500
+                loadtime = loadtime + 100
 
-        }, 1000 + loadtime);
+        }, 00 + loadtime);
 
         
     },false)
