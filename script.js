@@ -113,11 +113,11 @@ function observeVideoPost() {
                     video.loop = true
                     video.play();             
                 }
-                // else{
-                //     // video.autoplay = false;
-                //     video.loop = false;
-                //     video.pause()
-                // }
+                else{
+                    video.autoplay = false;
+                    video.loop = false;
+                    video.pause()
+                }
             })
         },{
             root: null,
@@ -391,6 +391,7 @@ function getVideos () {
     
 }
 
+// https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
 
 // CREATING A VIDEO POST
 function createVideoPost(videoList) {
@@ -401,8 +402,8 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video class="myVideo film"  preload="auto" autoplay muted>
-                        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4">
+                    <video class="myVideo film"  preload="auto" loop autoplay muted>
+                        <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
