@@ -113,6 +113,12 @@ function observeVideoPost() {
                     video.loop = true
                     video.play();             
                 }
+                else{
+                    if (video.readyState >= 3) {
+                        video.pause()
+                        console.log("pausing");
+                    }
+                }
             })
         },{
             root: null,
