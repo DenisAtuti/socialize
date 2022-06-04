@@ -115,8 +115,7 @@ function observeVideoPost() {
                 }
                 else{
                     if (video.readyState >= 3) {
-                        video.pause()
-                        console.log("pausing");
+                        video.autoplay = false;
                     }
                 }
             })
