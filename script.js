@@ -369,7 +369,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(645)
+    const page = generateRandomPageNumber(96)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
