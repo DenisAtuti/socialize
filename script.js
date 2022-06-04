@@ -533,14 +533,9 @@ function observeLastVideoAndCallApi() {
             }
             
             if (isAllVideoLoaded) {
-                
-                // clearTimeout(timer);
-                setTimeout(function() {
-
-                    console.log("calling more troops");
-                    getVideos ()
-    
-                },150)       
+                console.log("calling more troops");
+                getVideos ()
+          
                 
             }
 
