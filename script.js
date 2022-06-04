@@ -113,11 +113,7 @@ function observeVideoPost() {
                     video.play();             
                     video.loop = true
                 }
-                else{
-                    if (video.readyState >= 3) {
-                        video.autoplay = false;
-                    }
-                }
+                
             })
         },{
             root: null,
@@ -382,8 +378,8 @@ function getVideos () {
       disbleSentButton()
       followBtnClicked()
       openCloseLoginModel()
-      observeVideoPost();
       observeLastVideoAndCallApi()
+      observeVideoPost();
       showLoadingIconWhenBuffering();
     }).catch(error =>{
         console.log(error);
