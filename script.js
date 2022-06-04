@@ -507,8 +507,6 @@ function createVideoPost(videoList) {
 }
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
-let loadTime = 0
-
 function observeLastVideoAndCallApi() {
   
     const postContainer = document.querySelector(".post-container")
@@ -531,18 +529,18 @@ function observeLastVideoAndCallApi() {
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
                 console.log("this is the bottom");
-
-                
         
                 if (isAllVideoLoaded === true) {
-                    console.log("calling more troops");
-                    getVideos ()
-                    loadTime = loadTime + 20
+                    setTimeout(function () {
+                        console.log("calling more troops");
+                        getVideos ()
+                    
+                    },150)
                 }
                  
             } 
 
-        }, 10 + loadTime);
+        }, 150);
 
         
     },false)
