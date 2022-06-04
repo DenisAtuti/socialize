@@ -407,7 +407,7 @@ function createVideoPost(videoList) {
             <div class="video-player-container">
                 <div class="player">
                     <video class="myVideo film"  preload="auto" loop autoplay muted>
-                        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4">
+                        <source src="${video.videoLocationUrl}" type="video/mp4">
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
