@@ -519,22 +519,23 @@ function observeLastVideoAndCallApi() {
     const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
 
     console.log(postContainer);
-    let timer = null;
+    let timer;
     postContainer.addEventListener("scroll",()=>{
 
-        if(timer !== null) {
-            clearTimeout(timer);        
-        }
+        clearTimeout(timer);        
+
         timer = setTimeout(function() {
 
+            console.log( 'Scrolling has stopped.' );
+            const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
+            function isThisVideoLoaded(video) {
+                return video.readyState === 4;
+            }
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
                 console.log("this is the bottom");
+
                 
-                const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
-                function isThisVideoLoaded(video) {
-                    return video.readyState === 4;
-                }
         
                 if (isAllVideoLoaded) {
                     console.log("calling more troops");
@@ -544,7 +545,7 @@ function observeLastVideoAndCallApi() {
                  
             } 
 
-        }, 150);
+        }, 5);
 
         
     },false)
