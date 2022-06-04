@@ -378,8 +378,8 @@ function getVideos () {
       disbleSentButton()
       followBtnClicked()
       openCloseLoginModel()
-      observeLastVideoAndCallApi()
       observeVideoPost();
+      observeLastVideoAndCallApi()
       showLoadingIconWhenBuffering();
     }).catch(error =>{
         console.log(error);
