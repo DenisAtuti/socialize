@@ -109,16 +109,15 @@ function observeVideoPost() {
                 if (entry.isIntersecting) {
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    if (typeof video.loop == 'boolean') { // loop supported
-                        video.loop = true;
-                      } else { // loop property not supported
-                        video.addEventListener('ended', function () {
-                          this.currentTime = 0;
-                          this.play();
-                        }, false);
-                      }
+                    video.currentTime = 0
+                    video.loop = true
                     video.play();             
                 }
+                // else{
+                //     // video.autoplay = false;
+                //     video.loop = false;
+                //     video.pause()
+                // }
             })
         },{
             root: null,
@@ -403,7 +402,7 @@ function createVideoPost(videoList) {
             <div class="video-player-container">
                 <div class="player">
                     <video class="myVideo film"  preload="auto" autoplay muted>
-                        <source src="${video.videoLocationUrl}" type="video/mp4">
+                        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4">
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
@@ -529,11 +528,11 @@ function observeLastVideoAndCallApi() {
 
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-
+                console.log("this is the bottom");
                 
                 const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
                 function isThisVideoLoaded(video) {
-                    return video.readyState === 4;
+                    return video.readyState >= 3;
                 }
         
                 if (isAllVideoLoaded) {
