@@ -367,7 +367,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(546)
+    const page = generateRandomPageNumber(645)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -519,7 +519,7 @@ function observeLastVideoAndCallApi() {
     const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
     
     console.log(postContainer);
-    let timer;
+    // let timer;
     postContainer.addEventListener("scroll",()=>{
 
         if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
@@ -532,8 +532,8 @@ function observeLastVideoAndCallApi() {
             
             if (isAllVideoLoaded) {
                 
-                clearTimeout(timer);
-                timer = setTimeout(function() {
+                // clearTimeout(timer);
+                setTimeout(function() {
 
                     console.log("calling more troops");
                     getVideos ()
