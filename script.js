@@ -113,6 +113,11 @@ function observeVideoPost() {
                     video.play();             
                     video.loop = true
                 }
+                else{
+                    if(video.readyState === 4){
+                        video.autoplay = false;
+                    }
+                }
                 
             })
         },{
