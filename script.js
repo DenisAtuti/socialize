@@ -112,6 +112,7 @@ function observeVideoPost() {
                     video.currentTime = 0
                     video.play();             
                     video.loop = true
+                    video.autoplay = true;
                 }
                 else{
                     if(video.readyState === 4){
