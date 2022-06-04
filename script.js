@@ -116,6 +116,7 @@ function observeVideoPost() {
                 else{
                     if(video.readyState === 4){
                         video.autoplay = false;
+                        video.loop = false
                     }
                 }
                 
