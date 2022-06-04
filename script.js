@@ -116,7 +116,7 @@ function observeVideoPost() {
                 else{
                     video.autoplay = false;
                     video.loop = false;
-                    video.pause()
+                    // video.pause()
                 }
             })
         },{
@@ -533,12 +533,13 @@ function observeLastVideoAndCallApi() {
                 
                 const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
                 function isThisVideoLoaded(video) {
-                    return video.readyState >= 3;
+                    return video.readyState === 4;
                 }
         
                 if (isAllVideoLoaded) {
                     console.log("calling more troops");
-                    getMorePost()
+                    getVideos ()
+                    
                 }
                  
             } 
@@ -553,29 +554,29 @@ function observeLastVideoAndCallApi() {
  
 }
 
-function getMorePost() {
-    const page = generateRandomPageNumber(30)
+// function getMorePost() {
+//     const page = generateRandomPageNumber(30)
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
-  .then(response =>{
-      if (response.ok) {
-        toggleLinksAndHeaderTitle = false;
-        return response.json() 
-    }
-  }).then(data =>{
-      createVideoPost(data.content)
-      showLoadingIconWhenBuffering();
-      displayVideoLinks()
-      displayAds()
-      increamentLikes()
-      openCommentModel()
-      disbleSentButton()
-      followBtnClicked()
-      openCloseLoginModel()
-      observeVideoPost();
-      observeLastVideoAndCallApi()
-    }).catch(error =>{
-        console.log(error);
-    })
+//   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
+//   .then(response =>{
+//       if (response.ok) {
+//         toggleLinksAndHeaderTitle = false;
+//         return response.json() 
+//     }
+//   }).then(data =>{
+//       createVideoPost(data.content)
+//       showLoadingIconWhenBuffering();
+//       displayVideoLinks()
+//       displayAds()
+//       increamentLikes()
+//       openCommentModel()
+//       disbleSentButton()
+//       followBtnClicked()
+//       openCloseLoginModel()
+//       observeVideoPost();
+//       observeLastVideoAndCallApi()
+//     }).catch(error =>{
+//         console.log(error);
+//     })
     
-}
+// }
