@@ -113,11 +113,6 @@ function observeVideoPost() {
                     video.loop = true
                     video.play();             
                 }
-                else{
-                    video.autoplay = false;
-                    video.loop = false;
-                    // video.pause()
-                }
             })
         },{
             root: null,
@@ -366,7 +361,7 @@ function generateRandomPageNumber(pageSize){
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(30)
+    const page = generateRandomPageNumber(546)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -512,15 +507,17 @@ function createVideoPost(videoList) {
 }
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
+let loadTime = 0
 
 function observeLastVideoAndCallApi() {
   
     const postContainer = document.querySelector(".post-container")
     const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
-
+    
     console.log(postContainer);
     let timer;
     postContainer.addEventListener("scroll",()=>{
+        
 
         clearTimeout(timer);        
 
@@ -537,15 +534,15 @@ function observeLastVideoAndCallApi() {
 
                 
         
-                if (isAllVideoLoaded) {
+                if (isAllVideoLoaded === true) {
                     console.log("calling more troops");
                     getVideos ()
-                    
+                    loadTime = loadTime + 20
                 }
                  
             } 
 
-        }, 5);
+        }, 10 + loadTime);
 
         
     },false)
@@ -554,30 +551,3 @@ function observeLastVideoAndCallApi() {
 
  
 }
-
-// function getMorePost() {
-//     const page = generateRandomPageNumber(30)
-
-//   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
-//   .then(response =>{
-//       if (response.ok) {
-//         toggleLinksAndHeaderTitle = false;
-//         return response.json() 
-//     }
-//   }).then(data =>{
-//       createVideoPost(data.content)
-//       showLoadingIconWhenBuffering();
-//       displayVideoLinks()
-//       displayAds()
-//       increamentLikes()
-//       openCommentModel()
-//       disbleSentButton()
-//       followBtnClicked()
-//       openCloseLoginModel()
-//       observeVideoPost();
-//       observeLastVideoAndCallApi()
-//     }).catch(error =>{
-//         console.log(error);
-//     })
-    
-// }
