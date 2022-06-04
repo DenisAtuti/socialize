@@ -394,6 +394,7 @@ function getVideos () {
     
 }
 
+// ${video.videoLocationUrl}
 // https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
 
 // CREATING A VIDEO POST
@@ -406,7 +407,7 @@ function createVideoPost(videoList) {
             <div class="video-player-container">
                 <div class="player">
                     <video class="myVideo film"  preload="auto" loop autoplay muted>
-                        <source src="${video.videoLocationUrl}" type="video/mp4">
+                        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4">
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
@@ -515,37 +516,43 @@ function createVideoPost(videoList) {
 }
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
+const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
 function observeLastVideoAndCallApi() {
   
     const postContainer = document.querySelector(".post-container")
-    const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
     
     console.log(postContainer);
-    // let timer;
+    let isScrolling;
+    let count = 0
     postContainer.addEventListener("scroll",()=>{
 
-        if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+        clearTimeout(isScrolling)
 
+        isScrolling = setTimeout(() => {
             console.log( 'Scrolling has stopped.' );
-            const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
-            function isThisVideoLoaded(video) {
-                return video.readyState === 4;
-            }
-            
-            if (isAllVideoLoaded) {
-                console.log("calling more troops");
-                getVideos ()
-          
+            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+                count++
+                if (count <= 1) {
+
+                    console.log(postContainer.scrollTop);
+                    console.log(postContainer.scrollHeight - postContainer.offsetHeight)
+
+                    const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
+
+                    function isThisVideoLoaded(video) {
+                        return video.readyState === 4;
+                    }
+
+                    if(isAllVideoLoaded){
+                        console.log("calling more troops");
+                        getVideos ()
+                        
+                    }
+
+                }
                 
             }
-
-
-        }
-        
-        
+        }, 100);
     },false)
-
-
-
  
 }
