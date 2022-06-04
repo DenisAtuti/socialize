@@ -515,33 +515,30 @@ function observeLastVideoAndCallApi() {
     console.log(postContainer);
     let timer;
     postContainer.addEventListener("scroll",()=>{
-        
 
-        clearTimeout(timer);        
-
-        timer = setTimeout(function() {
+        if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
 
             console.log( 'Scrolling has stopped.' );
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
             function isThisVideoLoaded(video) {
                 return video.readyState === 4;
             }
+            
+            if (isAllVideoLoaded) {
+                
+                clearTimeout(timer);
+                timer = setTimeout(function() {
 
-            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-                console.log("this is the bottom");
+                    console.log("calling more troops");
+                    getVideos ()
+    
+                },150)       
+                
+            }
+
+
+        }
         
-                if (isAllVideoLoaded === true) {
-                    setTimeout(function () {
-                        console.log("calling more troops");
-                        getVideos ()
-                    
-                    },150)
-                }
-                 
-            } 
-
-        }, 150);
-
         
     },false)
 
