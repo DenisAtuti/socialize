@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let page = 1
 
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = true;
+const isLogedIn = false;
 
 /////// IF LOGEDIN ////
 
