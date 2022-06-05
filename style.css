@@ -355,6 +355,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 /* //////// VIDEO POST SECTION */
 .container .post-container{
     overflow-y: auto;
+    overflow-x:hidden;
     scroll-snap-type: block mandatory;
     /* height: 100vh; */
     max-width: 50%;

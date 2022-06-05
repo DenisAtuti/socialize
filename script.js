@@ -552,7 +552,7 @@ function observeLastVideoAndCallApi() {
                 }
                 
             }
-        }, 100);
+        }, 50);
     },false)
  
 }
