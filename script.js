@@ -108,18 +108,20 @@ function observeVideoPost() {
                 
                 if (entry.isIntersecting) {
                     addViewCount(videoId)
+                    console.log("intersecting");
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     video.currentTime = 0
-                    // video.play();             
-                    // video.loop = true
-                    // video.autoplay = true;
+                    video.play();
+                    video.loop = true
+                   
                 }
-                // else{
-                //     if(video.readyState === 4){
-                //         video.autoplay = false;
-                //         video.loop = false
-                //     }
-                // }
+                else{
+                    if (video.readyState === 4) {
+                        video.loop = false
+                        video.pause();
+                        
+                    }
+                }
                 
             })
         },{
@@ -154,6 +156,10 @@ function showLoadingIconWhenBuffering() {
 
     videos.forEach(videoItem =>{
 
+        videoItem.addEventListener("loadstart",()=>{
+            videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
+    
+        })
         videoItem.addEventListener("waiting",()=>{
             videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
     
@@ -388,6 +394,7 @@ function getVideos () {
       followBtnClicked()
       openCloseLoginModel()
       showLoadingIconWhenBuffering();
+      clickAdCloseIcon()
     }).catch(error =>{
         console.log(error);
     })
@@ -420,7 +427,7 @@ function createVideoPost(videoList) {
                 <div class="profile-container">
                     <div class="profile">
                         <div class="username">
-                            <p>${video.affiliateName}</p>
+                            <p>${video.affliateName}</p>
                             <i class="fas fa-check"></i>
                         </div>
                         <div class="follow-btn open-login-model">
@@ -516,38 +523,40 @@ function createVideoPost(videoList) {
 }
 
 // OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
-const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
 function observeLastVideoAndCallApi() {
-  
+    
     const postContainer = document.querySelector(".post-container")
     
     console.log(postContainer);
     let isScrolling;
     let count = 0
     postContainer.addEventListener("scroll",()=>{
-
+        
         clearTimeout(isScrolling)
-
+        
         isScrolling = setTimeout(() => {
+            const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
+            const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
+
+            console.log(isAllVideoLoaded);
+
+            function isThisVideoLoaded(video) {
+                console.log(video.readyState );
+                return video.readyState === 4;
+            }
+
             console.log( 'Scrolling has stopped.' );
-            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)  && isAllVideoLoaded){
+                console.log("its at the bottom");
                 count++
                 if (count <= 1) {
-
+                    
                     console.log(postContainer.scrollTop);
                     console.log(postContainer.scrollHeight - postContainer.offsetHeight)
 
-                    const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
+                    console.log("calling more troops");
+                    getVideos ()
 
-                    function isThisVideoLoaded(video) {
-                        return video.readyState === 4;
-                    }
-
-                    if(isAllVideoLoaded){
-                        console.log("calling more troops");
-                        getVideos ()
-                        
-                    }
 
                 }
                 
