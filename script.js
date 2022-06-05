@@ -111,15 +111,15 @@ function observeVideoPost() {
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     video.currentTime = 0
                     video.play();             
-                    video.loop = true
-                    video.autoplay = true;
+                    // video.loop = true
+                    // video.autoplay = true;
                 }
-                else{
-                    if(video.readyState === 4){
-                        video.autoplay = false;
-                        video.loop = false
-                    }
-                }
+                // else{
+                //     if(video.readyState === 4){
+                //         video.autoplay = false;
+                //         video.loop = false
+                //     }
+                // }
                 
             })
         },{
