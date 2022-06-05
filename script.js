@@ -378,6 +378,8 @@ function getVideos () {
     }
   }).then(data =>{
       createVideoPost(data.content)
+      observeLastVideoAndCallApi()
+      observeVideoPost();
       displayVideoLinks()
       displayAds()
       increamentLikes()
@@ -385,8 +387,6 @@ function getVideos () {
       disbleSentButton()
       followBtnClicked()
       openCloseLoginModel()
-      observeVideoPost();
-      observeLastVideoAndCallApi()
       showLoadingIconWhenBuffering();
     }).catch(error =>{
         console.log(error);
