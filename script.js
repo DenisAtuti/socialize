@@ -110,7 +110,7 @@ function observeVideoPost() {
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     video.currentTime = 0
-                    video.play();             
+                    // video.play();             
                     // video.loop = true
                     // video.autoplay = true;
                 }
