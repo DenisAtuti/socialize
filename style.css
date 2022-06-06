@@ -953,7 +953,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 /* TOAST SECTION */
 .toast-container{
     position: absolute;
-    bottom: 10rem;
+    bottom: 20rem;
 }
 .toast-container .toast-wrapper{
     position: relative;
