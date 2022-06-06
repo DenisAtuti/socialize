@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    openToast(loadToast)
     getVideos ();
+    
 });
 
 let page = 1
@@ -366,16 +368,36 @@ function openCloseLoginModel() {
 // generating random page numbers numbers
 function generateRandomPageNumber(pageSize){
     let rand = Math.random() * pageSize;
-    rand = Math.floor(rand); // 99
+    rand = Math.floor(rand); 
   
     return rand;
 }
+
+// TOAST SECTION
+const loadToast = document.querySelector(".toast.loading")
+const fetchToast = document.querySelector(".toast.fetching")
+const downloadToast = document.querySelector(".toast.downloading")
+
+function openToast(toast) {
+    setTimeout(() => {
+        toast.classList.add("active")    
+    }, 50);
+    toast.classList.remove("active") 
+}
+
+function closeToast(toast) {
+    setTimeout(() => {
+        toast.classList.remove("active")    
+    }, 50);
+}
+
+
 
 // VIDEO API CALL
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(368)
+    const page = generateRandomPageNumber(619)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -384,6 +406,8 @@ function getVideos () {
     }
   }).then(data =>{
       createVideoPost(data.content)
+      closeToast(loadToast)
+      closeToast(fetchToast)
       observeLastVideoAndCallApi()
       observeVideoPost();
       displayVideoLinks()
@@ -437,7 +461,7 @@ function createVideoPost(videoList) {
 
                 </div>
                 <div class="title-container">
-                    ${video.title}
+                    ${video.ttle}
                 </div>
             </div>  
             <div class="link-container">
@@ -542,26 +566,39 @@ function observeLastVideoAndCallApi() {
 
             function isThisVideoLoaded(video) {
                 console.log(video.readyState );
-                return video.readyState === 4;
+                return video.readyState >= 3;
+            }
+
+            if (!isAllVideoLoaded) {
+                openToast(downloadToast)                
+            }else{
+                closeToast(downloadToast)
             }
 
             console.log( 'Scrolling has stopped.' );
-            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)  && isAllVideoLoaded){
+            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
                 console.log("its at the bottom");
-                count++
-                if (count <= 1) {
+
+                if (count === 0) {
+
+                    console.log("counting asshole " + count);
+
+                    if(isAllVideoLoaded){
+                        console.log(postContainer.scrollTop);
+                        console.log(postContainer.scrollHeight - postContainer.offsetHeight)
+    
+                        console.log("calling more troops");
+                        getVideos ()
+                        openToast(fetchToast)
+                        count++
+                    }
                     
-                    console.log(postContainer.scrollTop);
-                    console.log(postContainer.scrollHeight - postContainer.offsetHeight)
-
-                    console.log("calling more troops");
-                    getVideos ()
-
 
                 }
                 
             }
-        }, 50);
+        }, 100);
     },false)
  
 }
+
