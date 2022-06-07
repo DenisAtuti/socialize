@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    screen.lockOrientationUniversal = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
     openToast(loadToast)
     getVideos ();
     
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let page = 1
 
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = false;
+const isLogedIn = true;
 
 /////// IF LOGEDIN ////
 
@@ -106,16 +107,17 @@ function observeVideoPost() {
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
                 const videoId = entry.target.dataset.target
-               
+                if(video.videoHeight > video.videoWidth){
+                    video.classList.add("portrait")
+                }               
                 
                 if (entry.isIntersecting) {
+                    
                     addViewCount(videoId)
-                    console.log("intersecting");
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     video.currentTime = 0
                     video.play();
-                    video.loop = true
-                   
+                    video.loop = true                                    
                 }
                 else{
                     if (video.readyState === 4) {
@@ -129,7 +131,7 @@ function observeVideoPost() {
         },{
             root: null,
             rootMargin:"0px",
-            threshold: 0
+            threshold: 1
         }
     )
 
@@ -379,16 +381,11 @@ const fetchToast = document.querySelector(".toast.fetching")
 const downloadToast = document.querySelector(".toast.downloading")
 
 function openToast(toast) {
-    setTimeout(() => {
-        toast.classList.add("active")    
-    }, 50);
-    toast.classList.remove("active") 
+    toast.classList.add("active")    
 }
 
 function closeToast(toast) {
-    setTimeout(() => {
-        toast.classList.remove("active")    
-    }, 50);
+    toast.classList.remove("active")    
 }
 
 
@@ -562,34 +559,24 @@ function observeLastVideoAndCallApi() {
             const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
-            console.log(isAllVideoLoaded);
-
             function isThisVideoLoaded(video) {
-                console.log(video.readyState );
                 return video.readyState >= 3;
             }
 
             
 
-            console.log( 'Scrolling has stopped.' );
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-                console.log("its at the bottom");
 
                 if (!isAllVideoLoaded) {
-                    openToast(downloadToast)                
-                }else{
-                    closeToast(downloadToast)
+                    openToast(downloadToast)
+                    setTimeout(() => {
+                        closeToast(downloadToast)
+                    }, 2000);
                 }
-
+            
                 if (count === 0) {
-
-                    console.log("counting asshole " + count);
-
                     if(isAllVideoLoaded){
-                        console.log(postContainer.scrollTop);
-                        console.log(postContainer.scrollHeight - postContainer.offsetHeight)
     
-                        console.log("calling more troops");
                         getVideos ()
                         openToast(fetchToast)
                         count++

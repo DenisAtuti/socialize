@@ -493,12 +493,15 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     text-align: center;
 }
 .post-container .post .video-player-container .player video{
-    object-fit: containe;
+    object-fit: contain;
     height: 100%;
     width: auto;
     overflow: hidden;
     z-index: 0;
     border: none;
+}
+.post-container .post .video-player-container .player video.portrait{
+    object-fit: cover;
 }
 .post-container .post .video-player-container .player video::-webkit-media-controls, 
 .post-container .post .video-player-container .player video::-moz-media-controls, 
