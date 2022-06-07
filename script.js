@@ -451,7 +451,7 @@ function createVideoPost(videoList) {
                 <div class="profile-container">
                     <div class="profile">
                         <div class="username">
-                            <p>${video.affliateName}</p>
+                            <p>${video.affiliateName}</p>
                             <i class="fas fa-check"></i>
                         </div>
                         <div class="follow-btn open-login-model">
@@ -461,7 +461,7 @@ function createVideoPost(videoList) {
 
                 </div>
                 <div class="title-container">
-                    ${video.ttle}
+                    ${video.title}
                 </div>
             </div>  
             <div class="link-container">
