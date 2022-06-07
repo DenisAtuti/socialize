@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    screen.lockOrientationUniversal = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
+    lockMobileScreen()
     openToast(loadToast)
     getVideos ();
     
@@ -25,6 +25,16 @@ const logoutMenuBtn = document.querySelector(".side-logout-btn")
 if (isLogedIn) {
     loginMenuBtn.style.display = "none"
     logoutMenuBtn.style.display = "block"
+}
+
+// LOCKING THE SCREEN WHEN ITS IN MOBILE
+function lockMobileScreen() {
+    let de=document.documentElement;
+    if(de.requestFullscreen){de.requestFullscreen();}
+    else if(de.mozRequestFullScreen){de.mozRequestFullScreen();}
+    else if(de.webkitRequestFullscreen){de.webkitRequestFullscreen();}
+    else if(de.msRequestFullscreen){de.msRequestFullscreen();}
+    screen.orientation.lock('portrait');
 }
 
 
@@ -169,7 +179,10 @@ function showLoadingIconWhenBuffering() {
     
         })
         videoItem.addEventListener("playing",()=>{
-            videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
+            if(videoItem.parentElement.querySelector(".loading-icon").classList.contains("active")){
+                videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
+
+            }
         })
     
        

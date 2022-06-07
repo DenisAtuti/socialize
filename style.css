@@ -502,6 +502,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .post-container .post .video-player-container .player video.portrait{
     object-fit: cover;
+    transition: all 2s ease-in-out;
 }
 .post-container .post .video-player-container .player video::-webkit-media-controls, 
 .post-container .post .video-player-container .player video::-moz-media-controls, 
