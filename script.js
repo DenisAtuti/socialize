@@ -29,11 +29,14 @@ if (isLogedIn) {
 
 // LOCKING THE SCREEN WHEN ITS IN MOBILE
 function lockMobileScreen() {
-    let de=document.documentElement;
-    if(de.requestFullscreen){de.requestFullscreen();}
+    let de = document.documentElement;
+    if(de.requestFullscreen){
+        de.requestFullscreen();
+    }
     else if(de.mozRequestFullScreen){de.mozRequestFullScreen();}
     else if(de.webkitRequestFullscreen){de.webkitRequestFullscreen();}
     else if(de.msRequestFullscreen){de.msRequestFullscreen();}
+    console.log("locking")
     screen.orientation.lock('portrait');
 }
 
