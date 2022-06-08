@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    lockMobileScreen()
     openToast(loadToast)
     getVideos ();
-    
 });
 
 let page = 1
 
 /////// UNIVERSAL SECTIION //////
-const isLogedIn = false;
+const isLogedIn = true;
 
 /////// IF LOGEDIN ////
 
@@ -103,6 +101,11 @@ likedBtn.forEach(item =>{
             window.location.href = "https://atutidennis.com/";
         }
     })
+})
+
+const fullScreenBtn = document.querySelector(".fullscreen")
+fullScreenBtn.addEventListener("click",()=>{
+    lockMobileScreen()
 })
 
 
@@ -573,7 +576,7 @@ function observeLastVideoAndCallApi() {
         
         isScrolling = setTimeout(() => {
 
-            
+            // lockMobileScreen();
 
             const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
@@ -583,6 +586,7 @@ function observeLastVideoAndCallApi() {
             }
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+               
 
                 if (!isAllVideoLoaded) {
                     openToast(downloadToast)

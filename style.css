@@ -131,6 +131,7 @@ nav .mini-menu-container .mini-menu-icon i{
 }
 nav .mini-menu-container .mini-menu-list{
     position: absolute;
+    width:20rem;
     max-height: 0;
     overflow: hidden;
     right: 0;
@@ -140,7 +141,7 @@ nav .mini-menu-container .mini-menu-list{
     transition: max-height 0.5s ease;
 }
 nav .mini-menu-container .mini-menu-list.active{
-    max-height: 40rem;
+    max-height: 45rem;
     transition: max-height 0.5s ease;
 }
 nav .mini-menu-container .mini-menu-list .item{
