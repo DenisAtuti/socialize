@@ -410,7 +410,7 @@ function closeToast(toast) {
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(898)
+    const page = generateRandomPageNumber(1362)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -572,14 +572,15 @@ function observeLastVideoAndCallApi() {
         clearTimeout(isScrolling)
         
         isScrolling = setTimeout(() => {
+
+            
+
             const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
             function isThisVideoLoaded(video) {
                 return video.readyState >= 3;
             }
-
-            
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
 
@@ -588,20 +589,19 @@ function observeLastVideoAndCallApi() {
                     setTimeout(() => {
                         closeToast(downloadToast)
                     }, 2000);
-                }
-            
-                if (count === 0) {
-                    if(isAllVideoLoaded){
-    
-                        getVideos ()
-                        openToast(fetchToast)
-                        count++
-                    }
-                    
+                }   
+            }
 
+            if (count === 0) {
+                if(isAllVideoLoaded){
+
+                    getVideos ()
+                    openToast(fetchToast)
+                    count++
                 }
                 
-            }
+
+            }                   
         }, 100);
     },false)
  
