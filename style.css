@@ -524,10 +524,10 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     align-items: center;
     opacity: 0;
     transition: opacity 0.4s;
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 .post-container .post .video-player-container .player .loading-icon.active{
-    pointer-events: none;
+    /* pointer-events: none; */
     opacity: 1;
     transition: opacity 0.4s;
 

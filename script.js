@@ -114,8 +114,8 @@ fullScreenBtn.addEventListener("click",()=>{
 
 //.......auto play as soon as it visible
 
-function observeVideoPost() {
-    const posts = document.querySelectorAll(".post:nth-last-child(-n+10)");
+function observeVideoPost(posts) {
+    // const posts = document.querySelectorAll(".post:nth-last-child(-n+3)");
 
     const observer = new IntersectionObserver(
         entries =>{
@@ -127,14 +127,14 @@ function observeVideoPost() {
                     video.classList.add("portrait")
                 }               
                 
-                if (entry.isIntersecting) {
-                    
+                if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     video.currentTime = 0
                     video.play();
                     video.loop = true 
-                    video.autoplay = true                                   
+                    video.autoplay = true 
+                    
                 }
                 else{
                     if (video.readyState === 4) {
@@ -158,14 +158,22 @@ function observeVideoPost() {
     
 }
 
-function displayVideoLinks() {
-    const allPosts = document.querySelectorAll(".video-player-container");
-    allPosts.forEach(post =>{
+function displayVideoLinks(loadingIconContainer) {
+    loadingIconContainer.forEach(post =>{
         post.addEventListener("click",() =>{
-            post.parentElement.querySelector(".post-header").classList.toggle("active")
-            post.parentElement.querySelector(".link-container").classList.toggle("active")
+            console.log("displaying links");
+    
+            const postHeaders = post.parentElement.parentElement.parentElement.querySelector(".post-header")
+            const postLinks = post.parentElement.parentElement.parentElement.querySelector(".link-container")
+    
+            console.log(postHeaders);
+            console.log(postLinks);
+            
+            postHeaders.classList.toggle("active")
+            postLinks.classList.toggle("active")
         })
     })
+    
    
 }
 
@@ -199,8 +207,8 @@ function showLoadingIconWhenBuffering() {
 
 /////// LINK SECTIION //////
 
-function increamentLikes() {
-    const likeIcons = document.querySelectorAll(".like")
+function increamentLikes(likeIcons) {
+    // const likeIcons = document.querySelectorAll(".like")
     likeIcons.forEach(icon =>{
 
         if (isLogedIn) { 
@@ -413,7 +421,7 @@ function closeToast(toast) {
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(1362)
+    const page = generateRandomPageNumber(1750)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -425,10 +433,10 @@ function getVideos () {
       closeToast(loadToast)
       closeToast(fetchToast)
       observeLastVideoAndCallApi()
-      observeVideoPost();
-      displayVideoLinks()
+    //   observeVideoPost();
+    //   displayVideoLinks()
       displayAds()
-      increamentLikes()
+    //   increamentLikes()
       openCommentModel()
       disbleSentButton()
       followBtnClicked()
@@ -559,6 +567,19 @@ function createVideoPost(videoList) {
         `)
         
     })
+
+    const posts = document.querySelectorAll(".post:nth-last-child(-n+3)");
+
+    const likeIcon = []
+    const headerLinkContainer = []
+    posts.forEach(post =>{
+        likeIcon.push(post.querySelector(".like"))
+        headerLinkContainer.push(post.querySelector(".loading-icon"))
+    })
+
+    observeVideoPost(posts)
+    increamentLikes(likeIcon)
+    displayVideoLinks(headerLinkContainer)
 
 }
 
