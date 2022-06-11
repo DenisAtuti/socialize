@@ -429,7 +429,7 @@ function closeToast(toast) {
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(1281)
+    const page = generateRandomPageNumber(2041)
 
   fetch(`https://socialize-backend.herokuapp.com/page?page=${page}`)
   .then(response =>{
