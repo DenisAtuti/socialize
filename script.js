@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
     getVideos ();
+    getMoreVideosEveryMinute();
 });
 
 let page = 1
@@ -113,6 +114,13 @@ fullScreenBtn.addEventListener("click",()=>{
 /////////// VIDEO SECTION ////////
 
 //.......auto play as soon as it visible
+function getMoreVideosEveryMinute() {
+    setInterval(() => {
+        console.log("its running");
+        openToast(fetchToast)
+        getVideos ()
+    },120000);
+}
 
 function observeVideoPost(posts) {
     // const posts = document.querySelectorAll(".post:nth-last-child(-n+3)");
@@ -421,9 +429,9 @@ function closeToast(toast) {
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(1750)
+    const page = generateRandomPageNumber(1281)
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
+  fetch(`https://socialize-backend.herokuapp.com/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -589,6 +597,9 @@ function observeLastVideoAndCallApi() {
     const postContainer = document.querySelector(".post-container")
     
     console.log(postContainer);
+
+   
+
     let isScrolling;
     let count = 0
     postContainer.addEventListener("scroll",()=>{
