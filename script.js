@@ -431,7 +431,7 @@ function getVideos () {
 
     const page = generateRandomPageNumber(2041)
 
-  fetch(`https://socialize-backend.herokuapp.com/page?page=${page}`)
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
