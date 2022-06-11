@@ -420,7 +420,8 @@ function openToast(toast) {
 }
 
 function closeToast(toast) {
-    toast.classList.remove("active")    
+    toast.classList.remove("active") 
+    console.log("toasting");   
 }
 
 // VIDEO API CALL
