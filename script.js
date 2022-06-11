@@ -423,8 +423,6 @@ function closeToast(toast) {
     toast.classList.remove("active")    
 }
 
-
-
 // VIDEO API CALL
 
 function getVideos () {
