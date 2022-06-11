@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
     getVideos ();
-    getMoreVideosEveryMinute();
 });
 
 let page = 1
@@ -114,12 +113,30 @@ fullScreenBtn.addEventListener("click",()=>{
 /////////// VIDEO SECTION ////////
 
 //.......auto play as soon as it visible
-function getMoreVideosEveryMinute() {
-    setInterval(() => {
+let clearTimeoutAfterCall = 0
+function getMoreVideosEveryMinute(videos) {
+
+    clearTimeout(clearTimeoutAfterCall)
+ 
+    clearTimeoutAfterCall = setInterval(() => {
+
+        const isAllVideoLoaded = Array.from(videos).every(isThisVideoLoaded)
+
+        function isThisVideoLoaded(video) {
+            return video.readyState === 4;
+        }
+        if(isAllVideoLoaded){
+             openToast(fetchToast)
+            getVideos ()
+        }
+
         console.log("its running");
-        openToast(fetchToast)
-        getVideos ()
-    },120000);
+        console.log(isAllVideoLoaded);
+        // openToast(fetchToast)
+        // getVideos ()
+    },10000);
+
+    
 }
 
 function observeVideoPost(posts) {
@@ -421,14 +438,13 @@ function openToast(toast) {
 
 function closeToast(toast) {
     toast.classList.remove("active") 
-    console.log("toasting");   
 }
 
 // VIDEO API CALL
 
 function getVideos () {
 
-    const page = generateRandomPageNumber(2041)
+    const page = generateRandomPageNumber(2105)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -577,16 +593,19 @@ function createVideoPost(videoList) {
 
     const posts = document.querySelectorAll(".post:nth-last-child(-n+3)");
 
+    const videos = []
     const likeIcon = []
     const headerLinkContainer = []
     posts.forEach(post =>{
         likeIcon.push(post.querySelector(".like"))
         headerLinkContainer.push(post.querySelector(".loading-icon"))
+        videos.push(post.querySelector("video"))
     })
 
     observeVideoPost(posts)
     increamentLikes(likeIcon)
     displayVideoLinks(headerLinkContainer)
+    getMoreVideosEveryMinute(videos)
 
 }
 
@@ -613,7 +632,7 @@ function observeLastVideoAndCallApi() {
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
             function isThisVideoLoaded(video) {
-                return video.readyState >= 3;
+                return video.readyState === 4;
             }
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
@@ -637,7 +656,7 @@ function observeLastVideoAndCallApi() {
                 
 
             }                   
-        }, 100);
+        }, 1000);
     },false)
  
 }
