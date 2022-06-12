@@ -290,7 +290,7 @@ function generateRandomPageNumber(pageSize){
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(2105)
+    const page = generateRandomPageNumber(2189)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
