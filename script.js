@@ -3,19 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideos ();
 });
 
-let page = 1
 
-/////// UNIVERSAL SECTIION //////
+// UNIVERSAL SECTIION
+let page = 1
 const isLogedIn = true;
 
-/////// IF LOGEDIN ////
-
+// NAVIGATION SECTION
 //...... display profile when login .....
 const profileImage = document.querySelector("nav >.login")
 if (isLogedIn) {
     profileImage.style.display = "block"
 }
 
+// DESKTOP MENU SECTION
 // .......side menu button.....
 const loginMenuBtn = document.querySelector(".side-login-btn")
 const logoutMenuBtn = document.querySelector(".side-logout-btn")
@@ -24,31 +24,6 @@ if (isLogedIn) {
     loginMenuBtn.style.display = "none"
     logoutMenuBtn.style.display = "block"
 }
-
-// LOCKING THE SCREEN WHEN ITS IN MOBILE
-function lockMobileScreen() {
-    let de = document.documentElement;
-    if(de.requestFullscreen){
-        de.requestFullscreen();
-    }
-    else if(de.mozRequestFullScreen){de.mozRequestFullScreen();}
-    else if(de.webkitRequestFullscreen){de.webkitRequestFullscreen();}
-    else if(de.msRequestFullscreen){de.msRequestFullscreen();}
-    console.log("locking")
-    screen.orientation.lock('portrait');
-}
-
-
-///////// MINI MENU /////////\
-const miniMenu = document.querySelector(".mini-menu-list")
-const miniMenuIcon = document.querySelector(".mini-menu-icon")
-
-miniMenuIcon.addEventListener("click",()=>{
-    miniMenu.classList.toggle("active")
-})
-
-
-///////// SIDE MENU SECTION ////////
 //.......toggle side menu it......
 
 const menuItems = document.querySelectorAll(".item")
@@ -108,40 +83,31 @@ fullScreenBtn.addEventListener("click",()=>{
     lockMobileScreen()
 })
 
-
-
-/////////// VIDEO SECTION ////////
-
-//.......auto play as soon as it visible
-let clearTimeoutAfterCall = 0
-function getMoreVideosEveryMinute(videos) {
-
-    clearTimeout(clearTimeoutAfterCall)
- 
-    clearTimeoutAfterCall = setInterval(() => {
-
-        const isAllVideoLoaded = Array.from(videos).every(isThisVideoLoaded)
-
-        function isThisVideoLoaded(video) {
-            return video.readyState === 4;
-        }
-        if(isAllVideoLoaded){
-             openToast(fetchToast)
-            getVideos ()
-        }
-
-        console.log("its running");
-        console.log(isAllVideoLoaded);
-        // openToast(fetchToast)
-        // getVideos ()
-    },10000);
-
-    
+// MOBILE MENU SECTION
+// Locking the mobile screen 
+function lockMobileScreen() {
+    let de = document.documentElement;
+    if(de.requestFullscreen){
+        de.requestFullscreen();
+    }
+    else if(de.mozRequestFullScreen){de.mozRequestFullScreen();}
+    else if(de.webkitRequestFullscreen){de.webkitRequestFullscreen();}
+    else if(de.msRequestFullscreen){de.msRequestFullscreen();}
+    console.log("locking")
+    screen.orientation.lock('portrait');
 }
 
-function observeVideoPost(posts) {
-    // const posts = document.querySelectorAll(".post:nth-last-child(-n+3)");
+// mini menu on mobile
+const miniMenu = document.querySelector(".mini-menu-list")
+const miniMenuIcon = document.querySelector(".mini-menu-icon")
 
+miniMenuIcon.addEventListener("click",()=>{
+    miniMenu.classList.toggle("active")
+})
+
+// VIDEO POST SECTION
+//.......auto play as soon as it visible
+function observeVideoPost(posts) {
     const observer = new IntersectionObserver(
         entries =>{
             entries.forEach(entry =>{
@@ -183,6 +149,30 @@ function observeVideoPost(posts) {
     
 }
 
+// fetch new data every minute as soon as all video in the page are loaded
+let clearTimeoutAfterCall = 0
+function getMoreVideosEveryMinute(videos) {
+
+    clearTimeout(clearTimeoutAfterCall)
+ 
+    clearTimeoutAfterCall = setInterval(() => {
+
+        const isAllVideoLoaded = Array.from(videos).every(isThisVideoLoaded)
+
+        function isThisVideoLoaded(video) {
+            return video.readyState === 4;
+        }
+        if(isAllVideoLoaded){
+             openToast(fetchToast)
+            getVideos ()
+        }
+
+    },60000);
+
+    
+}
+
+// toggle video links and headers
 function displayVideoLinks(loadingIconContainer) {
     loadingIconContainer.forEach(post =>{
         post.addEventListener("click",() =>{
@@ -202,7 +192,7 @@ function displayVideoLinks(loadingIconContainer) {
    
 }
 
-
+// show a loading icon when video is buffering
 function showLoadingIconWhenBuffering() {
     const videos = document.querySelectorAll(".myVideo");
     
@@ -228,12 +218,8 @@ function showLoadingIconWhenBuffering() {
     })
 }
 
-
-
-/////// LINK SECTIION //////
-
+// increment likes when like icon is clicked
 function increamentLikes(likeIcons) {
-    // const likeIcons = document.querySelectorAll(".like")
     likeIcons.forEach(icon =>{
 
         if (isLogedIn) { 
@@ -258,93 +244,7 @@ function increamentLikes(likeIcons) {
     
 
 }
-
-
-
-///////// AD SECTION /////////
-
-//........close ad banner on click......
-function clickAdCloseIcon() {
-    const adIcons = document.querySelectorAll(".ad-close-icon")
-    adIcons.forEach(adIcon =>{
-        adIcon.addEventListener("click",()=>{
-            adIcon.parentElement.style.display = "none";
-        })
-    })
-}
-///// DISPLAY ADD WHEN ITS VISIBLE /////
-function displayAds() {
-    const ads = document.querySelectorAll(".ad-container");
-
-    const adObserver = new IntersectionObserver(
-        entries =>{
-            entries.forEach(entry =>{
-
-                if (entry.target.classList.contains("ad-container")) {
-
-                    if (entry.isIntersecting) {
-
-                    entry.target.classList.add("active")
-
-                    }else{
-
-                        entry.target.classList.remove("active")
-                    }
-                    
-                }
-            })
-        },{
-            root: null,
-            rootMargin:"0px",
-            threshold: 0
-        }
-    )
-
-    ads.forEach(ad =>{
-        adObserver.observe(ad);
-    })
-
-    clickAdCloseIcon();
-}
-
-
-/////////// COMMENT SECTION /////////
-
-
-//.......disable sent button if not loged in ......
-function disbleSentButton() {
-    const commentPostBtns = document.querySelectorAll(".post-comment-container > button")
-    if (!isLogedIn) {
-        commentPostBtns.forEach(bts =>{
-            bts.disabled = true;
-            bts.style.cursor = "not-allowed";
-        })
-    }
-}
-
-
-//....... open comment model .....
-function openCommentModel() {
-    const commentOpenIcons = document.querySelectorAll(".comment-icon");
-
-    commentOpenIcons.forEach(commentOpenIcon =>{
-        commentOpenIcon.addEventListener("click",() =>{
-            const post = commentOpenIcon.parentElement.parentElement.querySelector(".comment-container");
-            post.classList.add("active");
-        })
-    })
-
-    const commentCloseIcon = document.querySelectorAll(".comment-close-icon")
-    commentCloseIcon.forEach(commentContainer =>{
-
-        commentContainer.addEventListener("click",()=>{
-            commentContainer.parentElement.classList.remove("active")
-        })
-    })
-    
-}
-
-///////////// FOLLOW BUTTON //////////
+//follow button on clicked
 function followBtnClicked() {
     const followBtns = document.querySelectorAll(".follow-btn")
     if (isLogedIn) {
@@ -370,53 +270,13 @@ function followBtnClicked() {
 
 }
 
+// add view count as soon as it appear on the screen
 function addViewCount(videoId) {
     fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
     
-}
-
-/////////   LOGIN SECTION /////
-
-//.......highligt primary color inputs .....
-const inputs = document.querySelectorAll(".model-controller input")
-inputs.forEach(input =>{
-    input.addEventListener("keyup",() =>{
-        const text = input.value
-        console.log(text);
-        if (text.length != 0) {
-            input.parentElement.classList.add("active");
-            input.parentElement.querySelector("i").classList.add("active")
-
-        }else{
-            input.parentElement.classList.remove("active");
-            input.parentElement.querySelector("i").classList.remove("active")
-        }
-    })
-})
-
-//...... open login model .....
-function openCloseLoginModel() {
-    const loginModel = document.querySelector(".login-model-container")
-    const loginItems = document.querySelectorAll(".open-login-model")
-
-    loginItems.forEach(item =>{
-        item.addEventListener("click",()=>{
-            loginModel.classList.add("active")
-        })
-    })
-
-
-    //........ close login model .......
-
-    const closeModelIcon = document.querySelector(".login-model-close-icon")
-
-    closeModelIcon.addEventListener("click",() =>{
-        loginModel.classList.remove("active")
-    })
-
 }
 
 // generating random page numbers numbers
@@ -427,22 +287,7 @@ function generateRandomPageNumber(pageSize){
     return rand;
 }
 
-// TOAST SECTION
-const loadToast = document.querySelector(".toast.loading")
-const fetchToast = document.querySelector(".toast.fetching")
-const downloadToast = document.querySelector(".toast.downloading")
-
-function openToast(toast) {
-    toast.classList.add("active")    
-}
-
-function closeToast(toast) {
-    toast.classList.remove("active") 
-    console.log("fucking");
-}
-
-// VIDEO API CALL
-
+// video post api call
 function getVideos () {
 
     const page = generateRandomPageNumber(2105)
@@ -457,10 +302,7 @@ function getVideos () {
       closeToast(loadToast)
       closeToast(fetchToast)
       observeLastVideoAndCallApi()
-    //   observeVideoPost();
-    //   displayVideoLinks()
       displayAds()
-    //   increamentLikes()
       openCommentModel()
       disbleSentButton()
       followBtnClicked()
@@ -473,10 +315,7 @@ function getVideos () {
     
 }
 
-// ${video.videoLocationUrl}
-// https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
-
-// CREATING A VIDEO POST
+// create each post card after api call
 function createVideoPost(videoList) {
     const videoPostContainer = document.querySelector(".post-container")
     
@@ -610,25 +449,16 @@ function createVideoPost(videoList) {
 
 }
 
-// OBSERVER VIDEO POST THEN MAKE API CALL WHEN THE SCROLL IS 100PX ABOVE
+// observe the last video post to make sure all videos are loaded to call new once
 function observeLastVideoAndCallApi() {
-    
     const postContainer = document.querySelector(".post-container")
-    
     console.log(postContainer);
-
-   
 
     let isScrolling;
     let count = 0
     postContainer.addEventListener("scroll",()=>{
-        
         clearTimeout(isScrolling)
-        
         isScrolling = setTimeout(() => {
-
-            // lockMobileScreen();
-
             const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
 
@@ -638,7 +468,6 @@ function observeLastVideoAndCallApi() {
 
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
                
-
                 if (!isAllVideoLoaded) {
                     openToast(downloadToast)
                     setTimeout(() => {
@@ -649,7 +478,6 @@ function observeLastVideoAndCallApi() {
 
             if (count === 0) {
                 if(isAllVideoLoaded){
-
                     getVideos ()
                     openToast(fetchToast)
                     count++
@@ -661,4 +489,145 @@ function observeLastVideoAndCallApi() {
     },false)
  
 }
+
+
+// AD SECTION
+
+//........close ad banner on click......
+function clickAdCloseIcon() {
+    const adIcons = document.querySelectorAll(".ad-close-icon")
+    adIcons.forEach(adIcon =>{
+        adIcon.addEventListener("click",()=>{
+            adIcon.parentElement.style.display = "none";
+        })
+    })
+}
+// display ad as soon as its visibel in the page
+function displayAds() {
+    const ads = document.querySelectorAll(".ad-container");
+
+    const adObserver = new IntersectionObserver(
+        entries =>{
+            entries.forEach(entry =>{
+
+                if (entry.target.classList.contains("ad-container")) {
+
+                    if (entry.isIntersecting) {
+
+                    entry.target.classList.add("active")
+
+                    }else{
+
+                        entry.target.classList.remove("active")
+                    }
+                    
+                }
+            })
+        },{
+            root: null,
+            rootMargin:"0px",
+            threshold: 0
+        }
+    )
+
+    ads.forEach(ad =>{
+        adObserver.observe(ad);
+    })
+
+    clickAdCloseIcon();
+}
+
+
+// COMMENT SECTION
+//disable sent button if not loged in
+function disbleSentButton() {
+    const commentPostBtns = document.querySelectorAll(".post-comment-container > button")
+    if (!isLogedIn) {
+        commentPostBtns.forEach(bts =>{
+            bts.disabled = true;
+            bts.style.cursor = "not-allowed";
+        })
+    }
+}
+
+
+// open comment model
+function openCommentModel() {
+    const commentOpenIcons = document.querySelectorAll(".comment-icon");
+
+    commentOpenIcons.forEach(commentOpenIcon =>{
+        commentOpenIcon.addEventListener("click",() =>{
+            const post = commentOpenIcon.parentElement.parentElement.querySelector(".comment-container");
+            post.classList.add("active");
+        })
+    })
+
+    const commentCloseIcon = document.querySelectorAll(".comment-close-icon")
+    commentCloseIcon.forEach(commentContainer =>{
+
+        commentContainer.addEventListener("click",()=>{
+            commentContainer.parentElement.classList.remove("active")
+        })
+    })
+    
+}
+
+
+
+// LOGIN SECTION 
+//.......highligt primary color inputs .....
+const inputs = document.querySelectorAll(".model-controller input")
+inputs.forEach(input =>{
+    input.addEventListener("keyup",() =>{
+        const text = input.value
+        console.log(text);
+        if (text.length != 0) {
+            input.parentElement.classList.add("active");
+            input.parentElement.querySelector("i").classList.add("active")
+
+        }else{
+            input.parentElement.classList.remove("active");
+            input.parentElement.querySelector("i").classList.remove("active")
+        }
+    })
+})
+
+//...... open login model .....
+function openCloseLoginModel() {
+    const loginModel = document.querySelector(".login-model-container")
+    const loginItems = document.querySelectorAll(".open-login-model")
+
+    loginItems.forEach(item =>{
+        item.addEventListener("click",()=>{
+            loginModel.classList.add("active")
+        })
+    })
+
+
+    //........ close login model .......
+
+    const closeModelIcon = document.querySelector(".login-model-close-icon")
+
+    closeModelIcon.addEventListener("click",() =>{
+        loginModel.classList.remove("active")
+    })
+
+}
+
+// TOAST SECTION
+const loadToast = document.querySelector(".toast.loading")
+const fetchToast = document.querySelector(".toast.fetching")
+const downloadToast = document.querySelector(".toast.downloading")
+
+function openToast(toast) {
+    toast.classList.add("active")    
+}
+
+function closeToast(toast) {
+    toast.classList.remove("active") 
+}
+
+// ${video.videoLocationUrl}
+// https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
+
 
