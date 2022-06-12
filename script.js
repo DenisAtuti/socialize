@@ -156,8 +156,8 @@ function observeVideoPost(posts) {
 }
 
 // fetch new data every minute as soon as all video in the page are loaded
+let clearTimeoutAfterCall = null
 function getMoreVideosEveryMinute(videos) {
-    let clearTimeoutAfterCall = null
 
     if (clearTimeoutAfterCall != null) {
         clearTimeout(clearTimeoutAfterCall)   
@@ -339,7 +339,7 @@ function swapVideo(videoId) {
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(2383)
+    const page = generateRandomPageNumber(2536)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
