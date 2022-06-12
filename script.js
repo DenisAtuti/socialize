@@ -122,7 +122,7 @@ function observeVideoPost(posts) {
                 if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    console.log("this is the inter secting video: " + videoId);
+                    // console.log("this is the inter secting video: " + videoId);
                     video.currentTime = 0
                     video.play();
                     video.loop = true 
@@ -156,14 +156,16 @@ function observeVideoPost(posts) {
 }
 
 // fetch new data every minute as soon as all video in the page are loaded
-let clearTimeoutAfterCall = 0
 function getMoreVideosEveryMinute(videos) {
-    // console.log("testing");
+    let clearTimeoutAfterCall = null
 
-    clearTimeout(clearTimeoutAfterCall)
-
+    if (clearTimeoutAfterCall != null) {
+        clearTimeout(clearTimeoutAfterCall)   
+    }
+    
     clearTimeoutAfterCall = setInterval(() => {
-
+        console.log("testing");
+        
         const isAllVideoLoaded = Array.from(videos).every(isThisVideoLoaded)
 
         function isThisVideoLoaded(video) {
@@ -175,7 +177,7 @@ function getMoreVideosEveryMinute(videos) {
             getVideos ()
         }
 
-    },30000);
+    },10000);
 
     
 }
@@ -218,7 +220,7 @@ function showLoadingIconWhenBuffering(video) {
         loadingTime = setTimeout(() => {
             console.log("waiting");
             swapVideo(video.getAttribute('id'))
-        }, 60000);
+        }, 20000);
         // clearTimeout(loadingTime)
     
     })
@@ -500,7 +502,7 @@ function createVideoPost(videoList) {
 // observe the last video post to make sure all videos are loaded to call new once
 function observeLastVideoAndCallApi() {
     const postContainer = document.querySelector(".post-container")
-    // console.log(postContainer);
+    console.log(postContainer);
 
     let isScrolling;
     let count = 0
@@ -533,7 +535,7 @@ function observeLastVideoAndCallApi() {
                 
 
             }                   
-        }, 1000);
+        }, 2000);
     },false)
  
 }
