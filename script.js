@@ -158,11 +158,11 @@ function observeVideoPost(posts) {
 // fetch new data every minute as soon as all video in the page are loaded
 let clearTimeoutAfterCall = null
 function getMoreVideosEveryMinute(videos) {
-
+    
     if (clearTimeoutAfterCall != null) {
         clearTimeout(clearTimeoutAfterCall)   
     }
-    
+    let count = 0
     clearTimeoutAfterCall = setInterval(() => {
         console.log("testing");
         
@@ -171,13 +171,17 @@ function getMoreVideosEveryMinute(videos) {
         function isThisVideoLoaded(video) {
             return video.readyState === 4;
         }
-        if(isAllVideoLoaded){
+        if(isAllVideoLoaded && count === 0){
             // console.log("Calling more troops");
-            openToast(fetchToast)
-            getVideos ()
+            setTimeout(() => {
+                openToast(fetchToast)
+                getVideos ()
+                count ++
+                
+            }, 1000);
         }
 
-    },10000);
+    },30000);
 
     
 }
@@ -220,7 +224,7 @@ function showLoadingIconWhenBuffering(video) {
         loadingTime = setTimeout(() => {
             console.log("waiting");
             swapVideo(video.getAttribute('id'))
-        }, 20000);
+        }, 10000);
         // clearTimeout(loadingTime)
     
     })
@@ -320,22 +324,23 @@ function degradeVideo(videoSrc) {
 // swap video to a lower qualitity while waiting
 function swapVideo(videoId) {
 
-
     const video = document.getElementById(`${videoId}`)
-
-    
-    // if (video){
-    //     video.remove()
-    // }
-    
-    // video = document.createElement('video')
-    // video.src = degradeVideo(video.src)
     video.src = degradeVideo(video.getAttribute("src"))
+    video.play()
     console.log(video);
-    // clearTimeout(loadingTime)
     
 }
 
+// hundling video loading error 
+function handleLoadError(videos) {
+
+    videos.forEach(video =>{
+        video.addEventListener("error",() =>{
+            console.log("there is an error");
+        })
+    })
+    
+}
 // video post api call
 function getVideos () {
 
@@ -495,6 +500,7 @@ function createVideoPost(videoList) {
     increamentLikes(likeIcon)
     displayVideoLinks(headerLinkContainer)
     getMoreVideosEveryMinute(videos)
+    handleLoadError(videos)
     // showLoadingIconWhenBuffering(videos)
 
 }
@@ -535,7 +541,7 @@ function observeLastVideoAndCallApi() {
                 
 
             }                   
-        }, 2000);
+        }, 4000);
     },false)
  
 }
