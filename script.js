@@ -114,6 +114,7 @@ function observeVideoPost(posts) {
                 const video = entry.target.querySelector(".video-player-container > .player > video")
                 const viewCount = entry.target.querySelector(".link-container > .view > span").innerText
                 const videoId = entry.target.dataset.target
+                video.setAttribute("id", videoId)
                 if(video.videoHeight > video.videoWidth){
                     video.classList.add("portrait")
                 }               
@@ -121,16 +122,21 @@ function observeVideoPost(posts) {
                 if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
+                    console.log("this is the inter secting video: " + videoId);
                     video.currentTime = 0
                     video.play();
                     video.loop = true 
                     video.autoplay = true 
-                    
+                    showLoadingIconWhenBuffering(video)
+                   
                 }
                 else{
                     if (video.readyState === 4) {
                         video.loop = false
                         video.autoplay = false
+                        video.pause();
+                    }else{
+                        video.load()
                     }
                 }
                 
@@ -152,9 +158,10 @@ function observeVideoPost(posts) {
 // fetch new data every minute as soon as all video in the page are loaded
 let clearTimeoutAfterCall = 0
 function getMoreVideosEveryMinute(videos) {
+    // console.log("testing");
 
     clearTimeout(clearTimeoutAfterCall)
- 
+
     clearTimeoutAfterCall = setInterval(() => {
 
         const isAllVideoLoaded = Array.from(videos).every(isThisVideoLoaded)
@@ -163,11 +170,12 @@ function getMoreVideosEveryMinute(videos) {
             return video.readyState === 4;
         }
         if(isAllVideoLoaded){
-             openToast(fetchToast)
+            // console.log("Calling more troops");
+            openToast(fetchToast)
             getVideos ()
         }
 
-    },60000);
+    },30000);
 
     
 }
@@ -193,29 +201,34 @@ function displayVideoLinks(loadingIconContainer) {
 }
 
 // show a loading icon when video is buffering
-function showLoadingIconWhenBuffering() {
-    const videos = document.querySelectorAll(".myVideo");
-    
+let loadingTime = null;
+function showLoadingIconWhenBuffering(video) {
 
-    videos.forEach(videoItem =>{
-
-        videoItem.addEventListener("loadstart",()=>{
-            videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
+    video.addEventListener("loadstart",()=>{
+        video.parentElement.querySelector(".loading-icon").classList.add("active")
     
-        })
-        videoItem.addEventListener("waiting",()=>{
-            videoItem.parentElement.querySelector(".loading-icon").classList.add("active")
-    
-        })
-        videoItem.addEventListener("playing",()=>{
-            if(videoItem.parentElement.querySelector(".loading-icon").classList.contains("active")){
-                videoItem.parentElement.querySelector(".loading-icon").classList.remove("active")
-
-            }
-        })
-    
-       
     })
+    video.addEventListener("waiting",()=>{
+        video.parentElement.querySelector(".loading-icon").classList.add("active")
+
+        if(loadingTime != null){
+            clearTimeout(loadingTime)
+        }
+
+        loadingTime = setTimeout(() => {
+            console.log("waiting");
+            swapVideo(video.getAttribute('id'))
+        }, 60000);
+        // clearTimeout(loadingTime)
+    
+    })
+    video.addEventListener("playing",()=>{
+        if(video.parentElement.querySelector(".loading-icon").classList.contains("active")){
+            video.parentElement.querySelector(".loading-icon").classList.remove("active")
+        }
+    })
+    
+
 }
 
 // increment likes when like icon is clicked
@@ -287,10 +300,44 @@ function generateRandomPageNumber(pageSize){
     return rand;
 }
 
+// downgrading video quality from 1080 to 480
+function degradeVideo(videoSrc) {
+
+    if (videoSrc.includes("1080")) {
+        return videoSrc.replace("1080","720")
+        
+    }
+    if (videoSrc.includes("720")) {
+        return videoSrc.replace("720","480")
+        
+    }
+
+    return videoSrc
+}
+
+// swap video to a lower qualitity while waiting
+function swapVideo(videoId) {
+
+
+    const video = document.getElementById(`${videoId}`)
+
+    
+    // if (video){
+    //     video.remove()
+    // }
+    
+    // video = document.createElement('video')
+    // video.src = degradeVideo(video.src)
+    video.src = degradeVideo(video.getAttribute("src"))
+    console.log(video);
+    // clearTimeout(loadingTime)
+    
+}
+
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(2189)
+    const page = generateRandomPageNumber(2383)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -307,7 +354,7 @@ function getVideos () {
       disbleSentButton()
       followBtnClicked()
       openCloseLoginModel()
-      showLoadingIconWhenBuffering();
+    //   showLoadingIconWhenBuffering();
       clickAdCloseIcon()
     }).catch(error =>{
         console.log(error);
@@ -316,6 +363,7 @@ function getVideos () {
 }
 
 // create each post card after api call
+//<source src="${video.videoLocationUrl}" type="video/mp4"></source>
 function createVideoPost(videoList) {
     const videoPostContainer = document.querySelector(".post-container")
     
@@ -324,8 +372,7 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video class="myVideo film video-js"  preload="auto" loop autoplay muted data-setup='{}'>
-                        <source src="${video.videoLocationUrl}" type="video/mp4">
+                    <video src="${video.videoLocationUrl}" type="video/mp4" class="myVideo film video-js"  preload="none" loop autoplay muted data-setup='{}'>
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
@@ -446,13 +493,14 @@ function createVideoPost(videoList) {
     increamentLikes(likeIcon)
     displayVideoLinks(headerLinkContainer)
     getMoreVideosEveryMinute(videos)
+    // showLoadingIconWhenBuffering(videos)
 
 }
 
 // observe the last video post to make sure all videos are loaded to call new once
 function observeLastVideoAndCallApi() {
     const postContainer = document.querySelector(".post-container")
-    console.log(postContainer);
+    // console.log(postContainer);
 
     let isScrolling;
     let count = 0
