@@ -184,13 +184,13 @@ function getMoreVideosEveryMinute(videos) {
             return video.readyState === 4;
         }
         if(isAllVideoLoaded && count === 0){
-            // console.log("Calling more troops");
+            console.log("Calling more troops");
             setTimeout(() => {
                 openToast(fetchToast)
                 getVideos ()
                 count ++
                 
-            }, 100);
+            },1000);
         }
 
     },10000);
