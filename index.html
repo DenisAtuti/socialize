@@ -162,21 +162,21 @@
             <div class="login-title">
                 Login or Sign up into Socialize
             </div>
-            <form action="">
+            <form action="" id="login-form">
                 <div class="model-controller">
                     <i class="far fa-user"></i>
-                    <input type="text" placeholder="username">
+                    <input type="text" id="username" name="username" required placeholder="username">
                 </div>
                 <div class="model-controller">
                     <i class="fas fa-lock"></i>
-                    <input type="text" placeholder="password">
+                    <input type="password" id="password" name="password" required placeholder="password">
                 </div>
                 <div class="model-controller submit">
-                    <button>Get Socialize</button>
+                    <button type="submit">Get Socialize</button>
                 </div>
             </form>
            <div class="login-model-close-icon">
-               <i class="fas fa-times"></i>
+                <i class="far fa-times-circle"></i>
            </div> 
         </div>
     </div>
@@ -193,6 +193,10 @@
             </div>
             <div class="toast downloading">
                 <p>Still downloading</p>
+                <i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="toast error">
+                <p>Server error</p>
                 <i class="fas fa-circle-notch fa-spin"></i>
             </div>
         </div>    

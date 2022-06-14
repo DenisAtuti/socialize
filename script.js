@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // UNIVERSAL SECTIION
 let page = 1
-const isLogedIn = true;
+const isLogedIn = false;
 
 // NAVIGATION SECTION
 //...... display profile when login .....
@@ -122,7 +122,7 @@ function observeVideoPost(posts) {
                 if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    // console.log("this is the inter secting video: " + videoId);
+                    console.log("this is the inter secting video: " + videoId);
                     video.currentTime = 0
                     video.play();
                     video.loop = true 
@@ -181,7 +181,7 @@ function getMoreVideosEveryMinute(videos) {
             }, 1000);
         }
 
-    },30000);
+    },60000);
 
     
 }
@@ -207,21 +207,36 @@ function displayVideoLinks(loadingIconContainer) {
 }
 
 // show a loading icon when video is buffering
-let loadingTime = null;
+let bufferingLoadingTime = null;
+let errorLoadingTime = null
 function showLoadingIconWhenBuffering(video) {
 
     video.addEventListener("loadstart",()=>{
         video.parentElement.querySelector(".loading-icon").classList.add("active")
     
     })
+
+    video.addEventListener("error",()=>{
+        video.parentElement.querySelector(".loading-icon").classList.add("active")
+        if(errorLoadingTime != null){
+            clearTimeout(errorLoadingTime)
+        }
+
+        errorLoadingTime = setTimeout(() => {
+            console.log("error");
+            swapVideo(video.getAttribute('id'))
+        }, 60000);
+    
+    })
+
     video.addEventListener("waiting",()=>{
         video.parentElement.querySelector(".loading-icon").classList.add("active")
 
-        if(loadingTime != null){
-            clearTimeout(loadingTime)
+        if(bufferingLoadingTime != null){
+            clearTimeout(bufferingLoadingTime)
         }
 
-        loadingTime = setTimeout(() => {
+        bufferingLoadingTime = setTimeout(() => {
             console.log("waiting");
             swapVideo(video.getAttribute('id'))
         }, 10000);
@@ -291,7 +306,7 @@ function followBtnClicked() {
 
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
+    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
@@ -326,8 +341,8 @@ function swapVideo(videoId) {
 
     const video = document.getElementById(`${videoId}`)
     video.src = degradeVideo(video.getAttribute("src"))
+    video.currentTime = 0;
     video.play()
-    console.log(video);
     
 }
 
@@ -336,7 +351,9 @@ function handleLoadError(videos) {
 
     videos.forEach(video =>{
         video.addEventListener("error",() =>{
-            console.log("there is an error");
+            setTimeout(() => {
+                swapVideo(video.getAttribute('id'))             
+            }, 60000);
         })
     })
     
@@ -344,9 +361,9 @@ function handleLoadError(videos) {
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(2536)
+    const page = generateRandomPageNumber(1623)
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
+  fetch(`http://localhost:8080/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -475,10 +492,10 @@ function createVideoPost(videoList) {
                     <div class="ad-content-text">
                         <h2>Best cooking</h2>
                         <p>Get best cooking</p>
-                        <button>Get Now</button>
+                        <button>Get now</button>
                     </div>
                 </div>
-                <i class="fas fa-times ad-close-icon"></i>
+                <i class="far fa-times-circle"></i>     
             </div>  
     </div> 
         `)
@@ -514,6 +531,13 @@ function observeLastVideoAndCallApi() {
     let count = 0
     postContainer.addEventListener("scroll",()=>{
         clearTimeout(isScrolling)
+
+        if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
+            openToast(downloadToast)
+        }else{
+            closeToast(downloadToast)
+        }
+
         isScrolling = setTimeout(() => {
             const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
             const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
@@ -525,7 +549,6 @@ function observeLastVideoAndCallApi() {
             if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
                
                 if (!isAllVideoLoaded) {
-                    openToast(downloadToast)
                     setTimeout(() => {
                         closeToast(downloadToast)
                     }, 2000);
@@ -551,7 +574,7 @@ function observeLastVideoAndCallApi() {
 
 //........close ad banner on click......
 function clickAdCloseIcon() {
-    const adIcons = document.querySelectorAll(".ad-close-icon")
+    const adIcons = document.querySelectorAll(".ad-container > i")
     adIcons.forEach(adIcon =>{
         adIcon.addEventListener("click",()=>{
             adIcon.parentElement.style.display = "none";
@@ -571,6 +594,9 @@ function displayAds() {
                     if (entry.isIntersecting) {
 
                     entry.target.classList.add("active")
+                    setTimeout(() => {
+                        entry.target.style.bottom = "0"       
+                    }, 2000);
 
                     }else{
 
@@ -636,7 +662,7 @@ const inputs = document.querySelectorAll(".model-controller input")
 inputs.forEach(input =>{
     input.addEventListener("keyup",() =>{
         const text = input.value
-        console.log(text);
+        // console.log(text);
         if (text.length != 0) {
             input.parentElement.classList.add("active");
             input.parentElement.querySelector("i").classList.add("active")
@@ -670,10 +696,48 @@ function openCloseLoginModel() {
 
 }
 
+// login
+const loginForm = document.getElementById("login-form")
+loginForm.addEventListener("submit",(e) =>{
+    e.preventDefault()
+    const formData = new FormData(loginForm)
+    const formDataSerialised = Object.fromEntries(formData);
+    console.log(formDataSerialised);
+
+    fetch("http://localhost:8080/api/v1/user/join", {
+        method: "POST",
+        body: JSON.stringify(formDataSerialised),
+        headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Jwt-token",
+        }
+    }).then(async (response) => {
+        console.log(response.json());
+        if (response.ok) {
+            return response.json()
+
+        }else if((response.status >= 400 && response.status < 600) ){
+            console.log(response.status);
+            openToast(errorToast)
+            setTimeout(() => {
+                closeToast(errorToast)
+            },3000);
+           
+        }
+
+    }).then( data =>{
+       
+    });
+
+
+})
+
 // TOAST SECTION
 const loadToast = document.querySelector(".toast.loading")
 const fetchToast = document.querySelector(".toast.fetching")
 const downloadToast = document.querySelector(".toast.downloading")
+const errorToast = document.querySelector(".toast.error")
 
 function openToast(toast) {
     toast.classList.add("active")    
