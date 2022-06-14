@@ -123,11 +123,25 @@ function observeVideoPost(posts) {
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     console.log("this is the inter secting video: " + videoId);
+                    video.muted = !video.muted
                     video.currentTime = 0
-                    video.play();
                     video.loop = true 
                     video.autoplay = true 
-                    showLoadingIconWhenBuffering(video)
+                    
+                    let playPromise = video.play();
+
+
+                    if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                            video.play()
+                        })
+                        .catch(error => {
+
+                            console.log(error);
+                            video.pause()
+                        
+                        });
+                    }
                    
                 }
                 else{
@@ -135,8 +149,6 @@ function observeVideoPost(posts) {
                         video.loop = false
                         video.autoplay = false
                         video.pause();
-                    }else{
-                        video.load()
                     }
                 }
                 
@@ -178,10 +190,10 @@ function getMoreVideosEveryMinute(videos) {
                 getVideos ()
                 count ++
                 
-            }, 1000);
+            }, 100);
         }
 
-    },60000);
+    },10000);
 
     
 }
@@ -209,45 +221,51 @@ function displayVideoLinks(loadingIconContainer) {
 // show a loading icon when video is buffering
 let bufferingLoadingTime = null;
 let errorLoadingTime = null
-function showLoadingIconWhenBuffering(video) {
-
-    video.addEventListener("loadstart",()=>{
-        video.parentElement.querySelector(".loading-icon").classList.add("active")
+function showLoadingIconWhenBuffering(videos) {
     
-    })
+    videos.forEach(video =>{
 
-    video.addEventListener("error",()=>{
-        video.parentElement.querySelector(".loading-icon").classList.add("active")
-        if(errorLoadingTime != null){
-            clearTimeout(errorLoadingTime)
-        }
-
-        errorLoadingTime = setTimeout(() => {
-            console.log("error");
-            swapVideo(video.getAttribute('id'))
-        }, 60000);
+        video.addEventListener("loadstart",()=>{
+            video.parentElement.querySelector(".loading-icon").classList.add("active")
+        
+        })
     
-    })
-
-    video.addEventListener("waiting",()=>{
-        video.parentElement.querySelector(".loading-icon").classList.add("active")
-
-        if(bufferingLoadingTime != null){
-            clearTimeout(bufferingLoadingTime)
-        }
-
-        bufferingLoadingTime = setTimeout(() => {
-            console.log("waiting");
-            swapVideo(video.getAttribute('id'))
-        }, 10000);
-        // clearTimeout(loadingTime)
+        video.addEventListener("error",()=>{
+            video.parentElement.querySelector(".loading-icon").classList.add("active")
+            if(errorLoadingTime != null){
+                clearTimeout(errorLoadingTime)
+            }
     
+            errorLoadingTime = setTimeout(() => {
+                console.log("error");
+                swapVideo(video.getAttribute('id'))
+            }, 60000);
+        
+        })
+    
+        video.addEventListener("waiting",()=>{
+            video.parentElement.querySelector(".loading-icon").classList.add("active")
+    
+            if(bufferingLoadingTime != null){
+                clearTimeout(bufferingLoadingTime)
+            }
+    
+            bufferingLoadingTime = setTimeout(() => {
+                console.log("waiting");
+                swapVideo(video.getAttribute('id'))
+            }, 10000);
+            // clearTimeout(loadingTime)
+        
+        })
+        video.addEventListener("playing",()=>{
+            if(video.parentElement.querySelector(".loading-icon").classList.contains("active")){
+                video.parentElement.querySelector(".loading-icon").classList.remove("active")
+            }
+        })
+
     })
-    video.addEventListener("playing",()=>{
-        if(video.parentElement.querySelector(".loading-icon").classList.contains("active")){
-            video.parentElement.querySelector(".loading-icon").classList.remove("active")
-        }
-    })
+
+    
     
 
 }
@@ -340,8 +358,9 @@ function degradeVideo(videoSrc) {
 function swapVideo(videoId) {
 
     const video = document.getElementById(`${videoId}`)
+    const currentBufferingTime = video.currentTime
     video.src = degradeVideo(video.getAttribute("src"))
-    video.currentTime = 0;
+    video.currentTime = currentBufferingTime;
     video.play()
     
 }
@@ -361,7 +380,7 @@ function handleLoadError(videos) {
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(2855)
+    const page = generateRandomPageNumber(3175)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -518,7 +537,7 @@ function createVideoPost(videoList) {
     displayVideoLinks(headerLinkContainer)
     getMoreVideosEveryMinute(videos)
     handleLoadError(videos)
-    // showLoadingIconWhenBuffering(videos)
+    showLoadingIconWhenBuffering(videos)
 
 }
 
@@ -557,7 +576,7 @@ function observeLastVideoAndCallApi() {
 
             if (count === 0) {
                 if(isAllVideoLoaded){
-                    getVideos ()
+                    // getVideos ()
                     openToast(fetchToast)
                     count++
                 }
