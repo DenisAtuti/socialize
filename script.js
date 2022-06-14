@@ -306,7 +306,7 @@ function followBtnClicked() {
 
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
@@ -361,9 +361,9 @@ function handleLoadError(videos) {
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(1623)
+    const page = generateRandomPageNumber(2855)
 
-  fetch(`http://localhost:8080/api/v1/videos/page?page=${page}`)
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -704,7 +704,7 @@ loginForm.addEventListener("submit",(e) =>{
     const formDataSerialised = Object.fromEntries(formData);
     console.log(formDataSerialised);
 
-    fetch("http://localhost:8080/api/v1/user/join", {
+    fetch("https://socialize-backend.herokuapp.com/api/v1/user/join", {
         method: "POST",
         body: JSON.stringify(formDataSerialised),
         headers: {
