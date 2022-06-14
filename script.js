@@ -415,7 +415,7 @@ function createVideoPost(videoList) {
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video src="${video.videoLocationUrl}" type="video/mp4" class="myVideo film video-js"  preload="none" loop autoplay muted data-setup='{}'>
+                    <video src="${video.videoLocationUrl}" type="video/mp4" class="myVideo film video-js"  preload="auto" loop autoplay muted data-setup='{}'>
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
