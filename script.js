@@ -122,7 +122,7 @@ function observeVideoPost(posts) {
                 if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    console.log("this is the inter secting video: " + videoId);
+                    // console.log("this is the inter secting video: " + videoId);
                     video.muted = !video.muted
                     video.currentTime = 0
                     video.loop = true 
@@ -184,8 +184,8 @@ function getMoreVideosEveryMinute(videos) {
             return video.readyState === 4;
         }
         if(isAllVideoLoaded && count === 0){
-            console.log("Calling more troops");
             setTimeout(() => {
+                console.log("Calling more troops");
                 openToast(fetchToast)
                 getVideos ()
                 count ++
@@ -193,7 +193,7 @@ function getMoreVideosEveryMinute(videos) {
             },1000);
         }
 
-    },10000);
+    },20000);
 
     
 }
@@ -253,7 +253,7 @@ function showLoadingIconWhenBuffering(videos) {
             bufferingLoadingTime = setTimeout(() => {
                 console.log("waiting");
                 swapVideo(video.getAttribute('id'))
-            }, 10000);
+            }, 20000);
             // clearTimeout(loadingTime)
         
         })
@@ -361,7 +361,8 @@ function swapVideo(videoId) {
     const currentBufferingTime = video.currentTime
     video.src = degradeVideo(video.getAttribute("src"))
     video.currentTime = currentBufferingTime;
-    video.play()
+    console.log("swapped");
+    video.load()
     
 }
 
@@ -391,13 +392,12 @@ function getVideos () {
       createVideoPost(data.content)
       closeToast(loadToast)
       closeToast(fetchToast)
-      observeLastVideoAndCallApi()
+      observeLastVideo()
       displayAds()
       openCommentModel()
       disbleSentButton()
       followBtnClicked()
       openCloseLoginModel()
-    //   showLoadingIconWhenBuffering();
       clickAdCloseIcon()
     }).catch(error =>{
         console.log(error);
@@ -542,14 +542,11 @@ function createVideoPost(videoList) {
 }
 
 // observe the last video post to make sure all videos are loaded to call new once
-function observeLastVideoAndCallApi() {
+function observeLastVideo() {
     const postContainer = document.querySelector(".post-container")
     console.log(postContainer);
 
-    let isScrolling;
-    let count = 0
     postContainer.addEventListener("scroll",()=>{
-        clearTimeout(isScrolling)
 
         if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
             openToast(downloadToast)
@@ -557,34 +554,8 @@ function observeLastVideoAndCallApi() {
             closeToast(downloadToast)
         }
 
-        isScrolling = setTimeout(() => {
-            const allVideos = document.querySelectorAll(".post > .video-player-container > .player > video")
-            const isAllVideoLoaded = Array.from(allVideos).every(isThisVideoLoaded)
-
-            function isThisVideoLoaded(video) {
-                return video.readyState === 4;
-            }
-
-            if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-               
-                if (!isAllVideoLoaded) {
-                    setTimeout(() => {
-                        closeToast(downloadToast)
-                    }, 2000);
-                }   
-            }
-
-            if (count === 0) {
-                if(isAllVideoLoaded){
-                    // getVideos ()
-                    openToast(fetchToast)
-                    count++
-                }
-                
-
-            }                   
-        }, 4000);
-    },false)
+        
+    })
  
 }
 
