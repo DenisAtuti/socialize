@@ -145,11 +145,11 @@ function observeVideoPost(posts) {
                    
                 }
                 else{
-                    if (video.readyState === 4) {
-                        video.loop = false
-                        video.autoplay = false
-                        video.pause();
-                    }
+                    video.loop = false
+                    // video.autoplay = false
+                    // if (video.readyState === 4) {
+                    //     video.pause();
+                    // }
                 }
                 
             })
