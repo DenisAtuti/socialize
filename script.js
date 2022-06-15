@@ -138,7 +138,7 @@ function observeVideoPost(posts) {
                         .catch(error => {
 
                             console.log(error);
-                            video.pause()
+                            // video.pause()
                         
                         });
                     }
