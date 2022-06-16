@@ -1,87 +1,123 @@
 document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
     getVideos ();
+    checkUserLogged()
 });
 
 
 // UNIVERSAL SECTIION
 let page = 1
-const isLogedIn = false;
+let isLogedIn = false;
+const storage = window.localStorage;
+
+
+// this will run when the user is loged in
+function checkUserLogged() {
+    const isUserLoggedIn = storage.getItem("isUserLoggedIn")
+    if (isUserLoggedIn) {
+        displayProfile()
+        toggleLogBtn() 
+        removeLogModel() 
+        menuIconClicked() 
+        removeLoginModelFromVideoIcon() 
+    }else{
+        disbleSentButton()
+    }
+
+}
+
 
 // NAVIGATION SECTION
 //...... display profile when login .....
-const profileImage = document.querySelector("nav >.login")
-if (isLogedIn) {
+function displayProfile() {
+    const profileImage = document.querySelector("nav >.login")
     profileImage.style.display = "block"
 }
 
+
 // DESKTOP MENU SECTION
 // .......side menu button.....
-const loginMenuBtn = document.querySelector(".side-login-btn")
-const logoutMenuBtn = document.querySelector(".side-logout-btn")
+function toggleLogBtn() {
+    const loginMenuBtn = document.querySelector(".side-login-btn")
+    const logoutMenuBtn = document.querySelector(".side-logout-btn")
 
-if (isLogedIn) {
     loginMenuBtn.style.display = "none"
     logoutMenuBtn.style.display = "block"
+    
 }
+
+
 //.......toggle side menu it......
+function toggleSideMenuItems() {
+    const menuItems = document.querySelectorAll(".item")
 
-const menuItems = document.querySelectorAll(".item")
-
-menuItems.forEach(item =>{
+    menuItems.forEach(item =>{
 
 
-    item.addEventListener("click",()=>{
-        
-        menuItems.forEach(item2 =>{
-            item2.classList.remove("active")
-        })
+        item.addEventListener("click",()=>{
+            
+            menuItems.forEach(item2 =>{
+                item2.classList.remove("active")
+            })
 
-        item.classList.add("active")
+            item.classList.add("active")
+        }) 
     })
+}
 
-    //........ login classes when logged on .....
+toggleSideMenuItems()
 
-    if (isLogedIn) {    
-        item.classList.remove("open-login-model");
-    }
-})
+ //........ login classes when logged on .....
+function removeLogModel() {
+    const menuItems = document.querySelectorAll(".item")
+    menuItems.forEach(item =>{
+        item.classList.remove("open-login-model");       
+    })
+    
+}
+
+
 
 //......for you icon clicked ......
 
+function menuIconClicked() {
 
-const forYouBtn = document.querySelectorAll(".for-you")
-const postContainer = document.querySelector(".post-container")
-forYouBtn.forEach(item =>{
-    item.addEventListener("click",()=>{
-        if (isLogedIn) {    
-            window.location.href = "https://atutidennis.com/";
-        }
+    const forYouBtn = document.querySelectorAll(".for-you")
+    const postContainer = document.querySelector(".post-container")
+    forYouBtn.forEach(item =>{
+        item.addEventListener("click",()=>{
+            window.location.href = "https://atutidennis.com/";          
+        })
     })
-})
 
-const followingBtn = document.querySelectorAll(".following")
-followingBtn.forEach(item =>{
-    item.addEventListener("click",() =>{
-        if (isLogedIn) {    
+    const followingBtn = document.querySelectorAll(".following")
+    followingBtn.forEach(item =>{
+        item.addEventListener("click",() =>{
+   
             window.location.href = "https://atutidennis.com/";
-        }
+            
+        })
     })
-})
 
-const likedBtn = document.querySelectorAll(".liked")
-likedBtn.forEach(item =>{ 
-    item.addEventListener("click",() =>{
-        if (isLogedIn) {    
+    const likedBtn = document.querySelectorAll(".liked")
+    likedBtn.forEach(item =>{ 
+        item.addEventListener("click",() =>{
+   
             window.location.href = "https://atutidennis.com/";
-        }
-    })
-})
 
-const fullScreenBtn = document.querySelector(".fullscreen")
-fullScreenBtn.addEventListener("click",()=>{
-    lockMobileScreen()
-})
+        })
+    })
+    
+}
+
+// set full screen when full screen is clicked
+function getFullScreen() {
+    const fullScreenBtn = document.querySelector(".fullscreen")
+    fullScreenBtn.addEventListener("click",()=>{
+        lockMobileScreen()
+    })
+}
+getFullScreen()
 
 // MOBILE MENU SECTION
 // Locking the mobile screen 
@@ -106,6 +142,18 @@ miniMenuIcon.addEventListener("click",()=>{
 })
 
 // VIDEO POST SECTION
+
+// remove login model from video link icon
+function removeLoginModelFromVideoIcon() {
+    console.log("plaese work")
+    const videoLink = document.querySelectorAll(".video-link")
+    videoLink.forEach(link =>{
+        console.log(link);
+        link.classList.remove("open-login-model")
+    })
+    
+}
+
 //.......auto play as soon as it visible
 function observeVideoPost(posts) {
     const observer = new IntersectionObserver(
@@ -123,7 +171,7 @@ function observeVideoPost(posts) {
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
                     // console.log("this is the inter secting video: " + videoId);
-                    video.muted = !video.muted
+                    video.muted = false
                     video.currentTime = 0
                     video.loop = true 
                     video.autoplay = true 
@@ -146,6 +194,7 @@ function observeVideoPost(posts) {
                 }
                 else{
                     video.loop = false
+                    video.muted = true
                     // video.autoplay = false
                     // if (video.readyState === 4) {
                     //     video.pause();
@@ -274,23 +323,21 @@ function showLoadingIconWhenBuffering(videos) {
 function increamentLikes(likeIcons) {
     likeIcons.forEach(icon =>{
 
-        if (isLogedIn) { 
-            icon.classList.remove("open-login-model");
-            icon.addEventListener("click",()=>{
-                if (!icon.classList.contains("active")) {
-                    const counter = parseInt(icon.querySelector("span").innerText) 
-                    icon.querySelector("span").innerText = counter + 1;
-                    icon.querySelector("i").style.color = "#ffa31a";
-                    icon.classList.add("active")
-                }else{
-                    const countertwo = parseInt(icon.querySelector("span").innerText) 
-                    icon.querySelector("span").innerText = countertwo - 1;
-                    icon.querySelector("i").style.color = "#D3D3D3";
-                    icon.classList.remove("active");
-                }
+        icon.classList.remove("open-login-model");
+        icon.addEventListener("click",()=>{
+            if (!icon.classList.contains("active")) {
+                const counter = parseInt(icon.querySelector("span").innerText) 
+                icon.querySelector("span").innerText = counter + 1;
+                icon.querySelector("i").style.color = "#ffa31a";
+                icon.classList.add("active")
+            }else{
+                const countertwo = parseInt(icon.querySelector("span").innerText) 
+                icon.querySelector("span").innerText = countertwo - 1;
+                icon.querySelector("i").style.color = "#D3D3D3";
+                icon.classList.remove("active");
+            }
                 
-            })
-        }
+        })
 
     })
     
@@ -299,26 +346,26 @@ function increamentLikes(likeIcons) {
 //follow button on clicked
 function followBtnClicked() {
     const followBtns = document.querySelectorAll(".follow-btn")
-    if (isLogedIn) {
+    
 
-        followBtns.forEach(btn =>{
-            btn.classList.remove("open-login-model");
-            btn.addEventListener("click",()=>{
-                const button = btn.querySelector("button");
-                button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-                setTimeout(() => {
-                    if (button.classList.contains("active")) {
-                        button.innerHTML = 'Follow';
-                        button.classList.remove("active")            
-                    }else{
-                        button.innerHTML = 'Following';
-                        button.classList.add("active") 
-                    }
-                }, 2000);
+    followBtns.forEach(btn =>{
+        btn.classList.remove("open-login-model");
+        btn.addEventListener("click",()=>{
+            const button = btn.querySelector("button");
+            button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            setTimeout(() => {
+                if (button.classList.contains("active")) {
+                    button.innerHTML = 'Follow';
+                    button.classList.remove("active")            
+                }else{
+                    button.innerHTML = 'Following';
+                    button.classList.add("active") 
+                }
+            }, 2000);
                 
             })
         })
-    }
+
 
 }
 
@@ -381,7 +428,7 @@ function handleLoadError(videos) {
 // video post api call
 function getVideos () {
 
-    const page = generateRandomPageNumber(3175)
+    const page = generateRandomPageNumber(3579)
 
   fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
   .then(response =>{
@@ -397,7 +444,7 @@ function getVideos () {
       openCommentModel()
       disbleSentButton()
       followBtnClicked()
-      openCloseLoginModel()
+      openLoginModel()
       clickAdCloseIcon()
     }).catch(error =>{
         console.log(error);
@@ -431,7 +478,7 @@ function createVideoPost(videoList) {
                             <p>${video.affiliateName}</p>
                             <i class="fas fa-check"></i>
                         </div>
-                        <div class="follow-btn open-login-model">
+                        <div class="follow-btn video-link open-login-model">
                             <button>Follow</button>
                         </div>     
                     </div>
@@ -447,7 +494,7 @@ function createVideoPost(videoList) {
                         <img src="https://robohash.org/dennis" alt="" srcset="">
                     </div>
                 </div>
-                <div class="link like open-login-model">
+                <div class="link like video-link open-login-model">
                 <i class="far fa-heart"></i>
                 <span>${video.userLikes.length}</span>
                 </div>
@@ -459,7 +506,7 @@ function createVideoPost(videoList) {
                     <i class="far fa-comment-alt"></i>
                     <span>${video.userViews.length}</span>
                 </div>
-                <div class="link share open-login-model">
+                <div class="link share video-link open-login-model">
                     <i class="far fa-share-square"></i>
                     <span>${video.posts.length}</span>
                 </div>
@@ -614,12 +661,11 @@ function displayAds() {
 //disable sent button if not loged in
 function disbleSentButton() {
     const commentPostBtns = document.querySelectorAll(".post-comment-container > button")
-    if (!isLogedIn) {
-        commentPostBtns.forEach(bts =>{
-            bts.disabled = true;
-            bts.style.cursor = "not-allowed";
-        })
-    }
+    commentPostBtns.forEach(bts =>{
+        bts.disabled = true;
+        bts.style.cursor = "not-allowed";
+    })
+    
 }
 
 
@@ -665,7 +711,7 @@ inputs.forEach(input =>{
 })
 
 //...... open login model .....
-function openCloseLoginModel() {
+function openLoginModel() {
     const loginModel = document.querySelector(".login-model-container")
     const loginItems = document.querySelectorAll(".open-login-model")
 
@@ -675,15 +721,19 @@ function openCloseLoginModel() {
         })
     })
 
-
     //........ close login model .......
 
     const closeModelIcon = document.querySelector(".login-model-close-icon")
 
     closeModelIcon.addEventListener("click",() =>{
-        loginModel.classList.remove("active")
+        closeLoginModel()
     })
 
+}
+//........ close login model .......
+function closeLoginModel() {
+    const loginModel = document.querySelector(".login-model-container")
+    loginModel.classList.remove("active")
 }
 
 // login
@@ -694,7 +744,7 @@ loginForm.addEventListener("submit",(e) =>{
     const formDataSerialised = Object.fromEntries(formData);
     console.log(formDataSerialised);
 
-    fetch("https://socialize-backend.herokuapp.com/api/v1/user/join", {
+    fetch("http://localhost:8080/api/v1/user/join", {
         method: "POST",
         body: JSON.stringify(formDataSerialised),
         headers: {
@@ -703,21 +753,29 @@ loginForm.addEventListener("submit",(e) =>{
         Authorization: "Jwt-token",
         }
     }).then(async (response) => {
-        console.log(response.json());
         if (response.ok) {
+
+            storage.setItem("isUserLoggedIn","true")
+            closeLoginModel()
+            checkUserLogged()
+
             return response.json()
 
-        }else if((response.status >= 400 && response.status < 600) ){
-            console.log(response.status);
-            openToast(errorToast)
-            setTimeout(() => {
-                closeToast(errorToast)
-            },3000);
+        }
+        else if((response.status >= 400 && response.status < 600) ){
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+            })
            
         }
 
     }).then( data =>{
-       
+       console.log(data);
     });
 
 

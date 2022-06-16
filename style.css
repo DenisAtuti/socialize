@@ -964,7 +964,8 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     background-color: var(--background-hover-color);
     text-align: center;
     padding: 1rem;
-    width:22rem;
+    width:25rem;
+    max-width: 100rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -992,7 +993,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .toast-container .toast.loading{
     border-right:solid 0.5rem var(--primary-color);
-    margin-left:-22rem;
+    margin-left:-25rem;
     transition: margin 0.4s;
 }
 .toast-container .toast.loading.active{
@@ -1001,7 +1002,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .toast-container .toast.fetching{
     border-right:solid 0.5rem green;
-    margin-left:-22rem;
+    margin-left:-25rem;
     transition: margin 0.4s;
 }
 .toast-container .toast.fetching.active{
@@ -1010,7 +1011,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .toast-container .toast.downloading{
     border-right:solid 0.5rem rgb(255, 70, 70);
-    margin-left:-22rem;
+    margin-left:-25rem;
     transition: margin 0.4s;
 }
 .toast-container .toast.downloading.active{
@@ -1019,7 +1020,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 .toast-container .toast.error{
     border-right:solid 0.5rem rgb(255, 70, 70);
-    margin-left:-22rem;
+    margin-left:-25rem;
     transition: margin 0.4s;
 }
 .toast-container .toast.error.active{
