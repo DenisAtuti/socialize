@@ -382,6 +382,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
 }
 
 .post-container .post{
+    scroll-snap-align: bottom;
     height: 100vh;
     display: flex;
     overflow:auto;
@@ -846,6 +847,7 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
 }
 
 .login-model-container.active{
@@ -979,6 +981,10 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     font-size: 2rem;
     color: var(--primary-color);
 }
+.toast-container .toast.last-page i{
+    font-size: 2rem;
+    color: var(--primary-color);
+}
 .toast-container .toast.fetching i{
     font-size: 2rem;
     color: green;
@@ -997,6 +1003,15 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     transition: margin 0.4s;
 }
 .toast-container .toast.loading.active{
+    margin-left: 0;
+    transition: margin 0.4s;
+}
+.toast-container .toast.last-page{
+    border-right:solid 0.5rem var(--primary-color);
+    margin-left:-25rem;
+    transition: margin 0.4s;
+}
+.toast-container .toast.last-page.active{
     margin-left: 0;
     transition: margin 0.4s;
 }

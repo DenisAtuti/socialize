@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
-    getVideos ();
+    getVideos (videoPageCount);
     checkUserLogged()
+    
 });
 
 
@@ -20,6 +21,7 @@ function checkUserLogged() {
         removeLogModel() 
         menuIconClicked() 
         removeLoginModelFromVideoIcon() 
+       
     }else{
         disbleSentButton()
     }
@@ -32,6 +34,12 @@ function checkUserLogged() {
 function displayProfile() {
     const profileImage = document.querySelector("nav >.login")
     profileImage.style.display = "block"
+    let profileName = JSON.parse(storage.getItem("user")).username;
+    if(profileName === null){
+        profileName = "user"
+    }
+
+    return profileName;
 }
 
 
@@ -170,31 +178,53 @@ function observeVideoPost(posts) {
                 if (entry.isIntersecting) {          
                     addViewCount(videoId)
                     entry.target.querySelector(".link-container > .view > span").innerText = parseInt(viewCount) + 1;
-                    // console.log("this is the inter secting video: " + videoId);
-                    video.muted = false
-                    video.currentTime = 0
-                    video.loop = true 
-                    video.autoplay = true 
-                    
-                    let playPromise = video.play();
+                    console.log("this is the inter secting video: " + videoId);
+
+                    // video.muted = false
+                    setTimeout(() => {
+                        video.currentTime = 0
+                            
+                        video.autoplay = true 
+
+                        let playPromise = video.play();
 
 
-                    if (playPromise !== undefined) {
-                        playPromise.then(_ => {
-                            video.play()
-                        })
-                        .catch(error => {
+                        if (playPromise !== undefined) {
+                            playPromise.then(_ => {
+                                video.play()
+                            })
+                            .catch(error => {
 
-                            console.log(error);
-                            // video.pause()
+                                console.log(error);
+                                    // video.pause()
+                                
+                            });
+                        }
                         
-                        });
-                    }
+                    }, 1000);
+                        
+                    
+                        video.loop = true 
+
+                    
+
+                    
+                    // video.addEventListener("ended",()=>{
+                    //     autoScroll()
+                    //     video.currentTime = 0
+                    //     video.play()
+                    // })
+                        
+            
+
+
+                  
                    
                 }
                 else{
-                    video.loop = false
-                    video.muted = true
+                    video.pause()
+                    // video.loop = false
+                    // video.muted = true
                     // video.autoplay = false
                     // if (video.readyState === 4) {
                     //     video.pause();
@@ -205,9 +235,10 @@ function observeVideoPost(posts) {
         },{
             root: null,
             rootMargin:"0px",
-            threshold: 0
+            threshold: 0.1
         }
     )
+    
 
     posts.forEach(post =>{
         observer.observe(post)
@@ -218,6 +249,11 @@ function observeVideoPost(posts) {
 
 // fetch new data every minute as soon as all video in the page are loaded
 let clearTimeoutAfterCall = null
+let contextshit = " "
+let affiliateToCall = " "
+let AffiliatePageCount = 0
+let videoPageCount = 1
+let lastPage = false;
 function getMoreVideosEveryMinute(videos) {
     
     if (clearTimeoutAfterCall != null) {
@@ -236,7 +272,23 @@ function getMoreVideosEveryMinute(videos) {
             setTimeout(() => {
                 console.log("Calling more troops");
                 openToast(fetchToast)
-                getVideos ()
+                console.log(contextshit);
+                switch(contextshit) {
+                    case "affiliate":
+                        console.log(lastPage);
+                        if(!lastPage){
+                            getAffiliateVideosCall(affiliateToCall, AffiliatePageCount)
+                            AffiliatePageCount++
+                        }else{
+                            console.log("last page");
+                            closeToast(fetchToast)
+                        }
+                      break;
+                    
+                    default:
+                        getVideos (videoPageCount)
+                        videoPageCount++
+                }
                 count ++
                 
             },1000);
@@ -318,12 +370,28 @@ function showLoadingIconWhenBuffering(videos) {
     
 
 }
+/// auto scroll once video is completed
+function autoScroll() {
+    const post = document.querySelector(".post-container")
+    post.style.scrollSnapType = "block proximity";
+    let timeInterval = setInterval(() => { 
+        post.scrollBy(0,15);
+    }, 10);
 
+    setTimeout(() => {
+        post.style.scrollSnapType = "block mandatory"
+        clearInterval(timeInterval)    
+    }, 500);
+
+   
+}
+
+// scroll left to open affiliate page
 // increment likes when like icon is clicked
 function increamentLikes(likeIcons) {
     likeIcons.forEach(icon =>{
 
-        icon.classList.remove("open-login-model");
+        // icon.classList.remove("open-login-model");
         icon.addEventListener("click",()=>{
             if (!icon.classList.contains("active")) {
                 const counter = parseInt(icon.querySelector("span").innerText) 
@@ -371,19 +439,11 @@ function followBtnClicked() {
 
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
+    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
     
-}
-
-// generating random page numbers numbers
-function generateRandomPageNumber(pageSize){
-    let rand = Math.random() * pageSize;
-    rand = Math.floor(rand); 
-  
-    return rand;
 }
 
 // downgrading video quality from 1080 to 480
@@ -425,12 +485,10 @@ function handleLoadError(videos) {
     })
     
 }
-// video post api call
-function getVideos () {
+//genneral video post api call
+function getVideos (videoPageCount) {
 
-    const page = generateRandomPageNumber(3579)
-
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${page}`)
+  fetch(`http://localhost:8080/api/v1/videos/page?page=${videoPageCount}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -452,17 +510,74 @@ function getVideos () {
     
 }
 
+//get affiliate videos
+function getAffiliateVideos(affiliateNames) {
+   
+    affiliateNames.forEach(affiliate =>{
+        affiliate.addEventListener("click",() =>{
+            console.log(affiliate.innerText);
+            getAffiliateVideosCall(affiliate.innerText,pageCount);
+            pageCount++
+        })
+    })
+    
+}
+
+
+
+function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
+
+    fetch(`http://localhost:8080/api/v1/videos/get/affiliate/videos/${affiliate}?page=${pageCount}`)
+    .then(response =>{
+        if (response.ok) {
+            contextshit = "affiliate"
+            affiliateToCall = affiliate;
+            console.log(contextshit);
+            console.log("page " + AffiliatePageCount);
+
+            return response.json() 
+        }
+    }).then(data =>{
+
+        if(data.totalPages <= AffiliatePageCount){
+            lastPage = true;
+            console.log(AffiliatePageCount);
+        }
+        if(AffiliatePageCount <= 0){
+            const videoPostContainer = document.querySelector(".post-container")
+            videoPostContainer.innerHTML = ""         
+        }
+        createVideoPost(data.content)
+        closeToast(loadToast)
+        closeToast(fetchToast)
+        observeLastVideo()
+        displayAds()
+        openCommentModel()
+        disbleSentButton()
+        followBtnClicked()
+        openLoginModel()
+        clickAdCloseIcon()
+    }).catch(error =>{
+        console.log(error);
+    })
+    
+}
+
 // create each post card after api call
 //<source src="${video.videoLocationUrl}" type="video/mp4"></source>
 function createVideoPost(videoList) {
     const videoPostContainer = document.querySelector(".post-container")
+    // let username = displayProfile();
+    // if(username === null){
+    //     username = "user"
+    // }
     
     videoList.forEach(video =>{
         videoPostContainer.insertAdjacentHTML('beforeEnd',`
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
                 <div class="player">
-                    <video src="${video.videoLocationUrl}" type="video/mp4" class="myVideo film video-js"  preload="auto" loop autoplay muted data-setup='{}'>
+                    <video src="${video.videoLocationUrl}" type="video/mp4" class="myVideo film video-js" muted="muted" preload="metadata" data-setup='{}'>
                         Your browser does not support this video format
                     </video>
                     <div class="loading-icon">
@@ -491,7 +606,7 @@ function createVideoPost(videoList) {
             <div class="link-container">
                 <div class="link link-profile">
                     <div class="image">
-                        <img src="https://robohash.org/dennis" alt="" srcset="">
+                        <img src="https://robohash.org/${username}" alt="" srcset="">
                     </div>
                 </div>
                 <div class="link like video-link open-login-model">
@@ -573,10 +688,12 @@ function createVideoPost(videoList) {
     const videos = []
     const likeIcon = []
     const headerLinkContainer = []
+    const affiliateNames = []
     posts.forEach(post =>{
         likeIcon.push(post.querySelector(".like"))
         headerLinkContainer.push(post.querySelector(".loading-icon"))
         videos.push(post.querySelector("video"))
+        affiliateNames.push(post.querySelector(".post-header > .profile-container > .profile > .username > p"))
     })
 
     observeVideoPost(posts)
@@ -585,8 +702,10 @@ function createVideoPost(videoList) {
     getMoreVideosEveryMinute(videos)
     handleLoadError(videos)
     showLoadingIconWhenBuffering(videos)
+    getAffiliateVideos(affiliateNames)
 
 }
+
 
 // observe the last video post to make sure all videos are loaded to call new once
 function observeLastVideo() {
@@ -596,9 +715,20 @@ function observeLastVideo() {
     postContainer.addEventListener("scroll",()=>{
 
         if( postContainer.scrollTop >= (postContainer.scrollHeight - postContainer.offsetHeight)){
-            openToast(downloadToast)
-        }else{
-            closeToast(downloadToast)
+            if (!lastPage) {
+                openToast(downloadToast)
+                setTimeout(() => {
+                    closeToast(downloadToast)    
+                }, 3000);
+            } 
+
+            if (lastPage) {
+                console.log("lastpage");
+                openToast(pageToast)
+                setTimeout(() => {
+                    closeToast(pageToast)    
+                }, 3000)
+            }
         }
 
         
@@ -755,9 +885,11 @@ loginForm.addEventListener("submit",(e) =>{
     }).then(async (response) => {
         if (response.ok) {
 
-            storage.setItem("isUserLoggedIn","true")
-            closeLoginModel()
-            checkUserLogged()
+            const token = "Bearer " + response.headers.get('Jwt-token');
+            storage.setItem("token", token)
+
+            // closeLoginModel()
+            // checkUserLogged()
 
             return response.json()
 
@@ -776,6 +908,7 @@ loginForm.addEventListener("submit",(e) =>{
 
     }).then( data =>{
        console.log(data);
+       storage.setItem("user",JSON.stringify(data))
     });
 
 
@@ -786,6 +919,7 @@ const loadToast = document.querySelector(".toast.loading")
 const fetchToast = document.querySelector(".toast.fetching")
 const downloadToast = document.querySelector(".toast.downloading")
 const errorToast = document.querySelector(".toast.error")
+const pageToast = document.querySelector(".toast.last-page")
 
 function openToast(toast) {
     toast.classList.add("active")    
