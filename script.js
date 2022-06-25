@@ -887,9 +887,10 @@ loginForm.addEventListener("submit",(e) =>{
 
             const token = "Bearer " + response.headers.get('Jwt-token');
             storage.setItem("token", token)
+            storage.setItem("isUserLoggedIn","true")
 
-            // closeLoginModel()
-            // checkUserLogged()
+            closeLoginModel()
+            checkUserLogged()
 
             return response.json()
 
