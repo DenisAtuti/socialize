@@ -439,7 +439,7 @@ function followBtnClicked() {
 
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
@@ -488,7 +488,7 @@ function handleLoadError(videos) {
 //genneral video post api call
 function getVideos (videoPageCount) {
 
-  fetch(`http://localhost:8080/api/v1/videos/page?page=${videoPageCount}`)
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${videoPageCount}`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -527,7 +527,7 @@ function getAffiliateVideos(affiliateNames) {
 
 function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
 
-    fetch(`http://localhost:8080/api/v1/videos/get/affiliate/videos/${affiliate}?page=${pageCount}`)
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/get/affiliate/videos/${affiliate}?page=${pageCount}`)
     .then(response =>{
         if (response.ok) {
             contextshit = "affiliate"
@@ -874,7 +874,7 @@ loginForm.addEventListener("submit",(e) =>{
     const formDataSerialised = Object.fromEntries(formData);
     console.log(formDataSerialised);
 
-    fetch("http://localhost:8080/api/v1/user/join", {
+    fetch("https://socialize-backend.herokuapp.com/api/v1/user/join", {
         method: "POST",
         body: JSON.stringify(formDataSerialised),
         headers: {
