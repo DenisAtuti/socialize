@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
-    getVideos (videoPageCount);
+    getVideos (0);
     checkUserLogged()
     
 });
@@ -15,12 +15,12 @@ const storage = window.localStorage;
 // this will run when the user is loged in
 function checkUserLogged() {
     const isUserLoggedIn = storage.getItem("isUserLoggedIn")
+    console.log(isUserLoggedIn);
     if (isUserLoggedIn) {
         displayProfile()
         toggleLogBtn() 
         removeLogModel() 
-        menuIconClicked() 
-        removeLoginModelFromVideoIcon() 
+        menuIconClicked()
        
     }else{
         disbleSentButton()
@@ -33,13 +33,13 @@ function checkUserLogged() {
 //...... display profile when login .....
 function displayProfile() {
     const profileImage = document.querySelector("nav >.login")
-    profileImage.style.display = "block"
-    let profileName = JSON.parse(storage.getItem("user")).username;
-    if(profileName === null){
-        profileName = "user"
-    }
 
-    return profileName;
+    profileImage.style.display = "block"
+
+    let profileName = JSON.parse(storage.getItem("user")).username;
+
+    profileImage.querySelector("img").src = `https://robohash.org/${profileName}`
+
 }
 
 
@@ -153,14 +153,19 @@ miniMenuIcon.addEventListener("click",()=>{
 
 // remove login model from video link icon
 function removeLoginModelFromVideoIcon() {
-    console.log("plaese work")
-    const videoLink = document.querySelectorAll(".video-link")
-    videoLink.forEach(link =>{
-        console.log(link);
-        link.classList.remove("open-login-model")
-    })
+    const isUserLoggedIn = storage.getItem("isUserLoggedIn")
+    console.log("why aint you working");
+    if(isUserLoggedIn){
+        const videoLink = document.querySelectorAll(".video-link")
+
+        videoLink.forEach(link =>{
+            link.classList.remove("open-login-model")
+        })
+    }
     
 }
+
+
 
 //.......auto play as soon as it visible
 function observeVideoPost(posts) {
@@ -398,11 +403,13 @@ function increamentLikes(likeIcons) {
                 icon.querySelector("span").innerText = counter + 1;
                 icon.querySelector("i").style.color = "#ffa31a";
                 icon.classList.add("active")
+                incrementVideoLike(icon);
             }else{
                 const countertwo = parseInt(icon.querySelector("span").innerText) 
                 icon.querySelector("span").innerText = countertwo - 1;
                 icon.querySelector("i").style.color = "#D3D3D3";
                 icon.classList.remove("active");
+                decrementVideoLike(icon)
             }
                 
         })
@@ -411,35 +418,184 @@ function increamentLikes(likeIcons) {
     
 
 }
+
+// increment likes backend
+function incrementVideoLike(likeIcon) {
+
+    const videoId = parseInt(likeIcon.parentElement.parentElement.dataset.target)
+    const username = JSON.parse(storage.getItem("user")).username;
+
+    fetch(`http://localhost:8080/api/v1/videos/add/like?videoId=${videoId}&username=${username}`,{
+        method: 'POST'
+    }).then(response =>{
+        if(response.ok){
+            return response.json()
+        }
+        else if((response.status >= 400 && response.status < 600) ){
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+            })
+           
+        }
+    }).then(data=>{
+        return data;
+    })
+
+    
+}
+
+// decrement likes backend
+function decrementVideoLike(likeIcon) {
+
+    const videoId = parseInt(likeIcon.parentElement.parentElement.dataset.target)
+    const username = JSON.parse(storage.getItem("user")).username;
+
+    fetch(`http://localhost:8080/api/v1/videos/remove/like?videoId=${videoId}&username=${username}`,{
+        method: 'POST'
+    }).then(response =>{
+        if(response.ok){
+            return response.json()
+        }
+        else if((response.status >= 400 && response.status < 600) ){
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+            })
+           
+        }
+    }).then(data=>{
+        return data;
+    })
+
+    
+}
+
+
+// edit like icon if the user liked it
+function setLikeIcon(params) {
+    
+}
+
 //follow button on clicked
 function followBtnClicked() {
     const followBtns = document.querySelectorAll(".follow-btn")
-    
+    const isUserLoggedIn = storage.getItem("isUserLoggedIn")
 
     followBtns.forEach(btn =>{
-        btn.classList.remove("open-login-model");
-        btn.addEventListener("click",()=>{
+        if(isUserLoggedIn){
+            btn.classList.remove("open-login-model");
             const button = btn.querySelector("button");
-            button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-            setTimeout(() => {
-                if (button.classList.contains("active")) {
-                    button.innerHTML = 'Follow';
-                    button.classList.remove("active")            
-                }else{
-                    button.innerHTML = 'Following';
-                    button.classList.add("active") 
-                }
-            }, 2000);
+
+            if (button.classList.contains("active")) {
+                button.innerHTML = 'Following';
+            }else{
+                button.innerHTML = 'Follow';
+            }
+
+            btn.addEventListener("click",()=>{
                 
+                button.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+                const affiliateName = btn.parentElement.querySelector(".username p").innerText;
+                setTimeout(() => {
+                    if (button.classList.contains("active")) {
+                        button.innerHTML = 'Follow';
+                        button.classList.remove("active") 
+                        removeAffiliateFollower(affiliateName)           
+                    }else{
+                        button.innerHTML = 'Following';
+                        button.classList.add("active") 
+                        addAffiliateFollower(affiliateName)
+                    }
+                }, 2000);
+                    
             })
-        })
+
+        }
+        
+    })
 
 
 }
 
+// add affiliate follower with current user
+function addAffiliateFollower(affiliateName) {
+    const jwtToken = storage.getItem("token")
+    fetch(`http://localhost:8080/api/v1/user/follow?affiliateName=${affiliateName}`, {
+        method: 'POST',
+        headers: {
+                Authorization: jwtToken,
+        },
+    }).then(response =>{
+        if (response.ok) {
+
+           return response.json()
+
+        }else if((response.status >= 400 && response.status < 600) ){
+
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+            })
+           
+        }
+    }).then(data =>{
+        console.log(JSON.stringify(data));
+    })
+}
+// add affiliate follower with current user
+function removeAffiliateFollower(affiliateName) {
+    const jwtToken = storage.getItem("token")
+    fetch(`http://localhost:8080/api/v1/user/unfollow?affiliateName=${affiliateName}`, {
+        method: 'POST',
+        headers: {
+                Authorization: jwtToken,
+        },
+    }).then(response =>{
+        if (response.ok) {
+
+           return response.json()
+
+        }else if((response.status >= 400 && response.status < 600) ){
+
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+            })
+           
+        }
+    }).then(data =>{
+        console.log(JSON.stringify(data));
+    })
+}
+
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/add/view/${videoId}`,{
+    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
@@ -487,23 +643,34 @@ function handleLoadError(videos) {
 }
 //genneral video post api call
 function getVideos (videoPageCount) {
+    let url = "";
+    const user = JSON.parse(storage.getItem("user"))
+    if(user !== null){
+        username = user.username
+        url = `&username=${username}`
+    }
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page?page=${videoPageCount}`)
+    // const username = JSON.parse(storage.getItem("user")).username;
+    // ?page=${videoPageCount}${url}
+
+  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
     }
   }).then(data =>{
-      createVideoPost(data.content)
-      closeToast(loadToast)
-      closeToast(fetchToast)
-      observeLastVideo()
-      displayAds()
-      openCommentModel()
-      disbleSentButton()
-      followBtnClicked()
-      openLoginModel()
-      clickAdCloseIcon()
+
+    console.log(data);
+    createVideoPost(data.content)
+    closeToast(loadToast)
+    closeToast(fetchToast)
+    observeLastVideo()
+    displayAds()
+    openCommentModel()
+    disbleSentButton()
+    followBtnClicked()
+    openLoginModel()
+    clickAdCloseIcon()
     }).catch(error =>{
         console.log(error);
     })
@@ -516,8 +683,8 @@ function getAffiliateVideos(affiliateNames) {
     affiliateNames.forEach(affiliate =>{
         affiliate.addEventListener("click",() =>{
             console.log(affiliate.innerText);
-            getAffiliateVideosCall(affiliate.innerText,pageCount);
-            pageCount++
+            getAffiliateVideosCall(affiliate.innerText,AffiliatePageCount);
+            AffiliatePageCount++
         })
     })
     
@@ -527,7 +694,14 @@ function getAffiliateVideos(affiliateNames) {
 
 function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
 
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/get/affiliate/videos/${affiliate}?page=${pageCount}`)
+    let url = "";
+    const user = JSON.parse(storage.getItem("user"))
+    if(user !== null){
+        username = user.username
+        url = `&username=${username}`
+    }
+
+    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/get/affiliate/videos/${affiliate}?page=${AffiliatePageCount}${url}`)
     .then(response =>{
         if (response.ok) {
             contextshit = "affiliate"
@@ -567,12 +741,16 @@ function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
 //<source src="${video.videoLocationUrl}" type="video/mp4"></source>
 function createVideoPost(videoList) {
     const videoPostContainer = document.querySelector(".post-container")
-    // let username = displayProfile();
-    // if(username === null){
-    //     username = "user"
-    // }
-    
+    let style;
+    let followStyle
+
     videoList.forEach(video =>{
+        if (video.isLiked) {
+            style = "active";
+        }
+        if(video.isFollowing){
+            followStyle = "active"
+        }
         videoPostContainer.insertAdjacentHTML('beforeEnd',`
         <div class="post" data-target="${video.id}">                         
             <div class="video-player-container">
@@ -594,7 +772,7 @@ function createVideoPost(videoList) {
                             <i class="fas fa-check"></i>
                         </div>
                         <div class="follow-btn video-link open-login-model">
-                            <button>Follow</button>
+                            <button class="${followStyle}">Follow</button>
                         </div>     
                     </div>
 
@@ -606,11 +784,11 @@ function createVideoPost(videoList) {
             <div class="link-container">
                 <div class="link link-profile">
                     <div class="image">
-                        <img src="https://robohash.org/${username}" alt="" srcset="">
+                        <img src="https://robohash.org/${video.affiliateName}" alt="" srcset="">
                     </div>
                 </div>
-                <div class="link like video-link open-login-model">
-                <i class="far fa-heart"></i>
+                <div class="link like video-link open-login-model ${style}">
+                <i class="far fa-heart ${style}"></i>
                 <span>${video.userLikes.length}</span>
                 </div>
                 <div class="link view">
@@ -703,6 +881,7 @@ function createVideoPost(videoList) {
     handleLoadError(videos)
     showLoadingIconWhenBuffering(videos)
     getAffiliateVideos(affiliateNames)
+    removeLoginModelFromVideoIcon();
 
 }
 
@@ -874,7 +1053,7 @@ loginForm.addEventListener("submit",(e) =>{
     const formDataSerialised = Object.fromEntries(formData);
     console.log(formDataSerialised);
 
-    fetch("https://socialize-backend.herokuapp.com/api/v1/user/join", {
+    fetch("http://localhost:8080/api/v1/user/join", {
         method: "POST",
         body: JSON.stringify(formDataSerialised),
         headers: {
@@ -888,9 +1067,7 @@ loginForm.addEventListener("submit",(e) =>{
             const token = "Bearer " + response.headers.get('Jwt-token');
             storage.setItem("token", token)
             storage.setItem("isUserLoggedIn","true")
-
-            closeLoginModel()
-            checkUserLogged()
+           
 
             return response.json()
 
@@ -908,8 +1085,12 @@ loginForm.addEventListener("submit",(e) =>{
         }
 
     }).then( data =>{
-       console.log(data);
-       storage.setItem("user",JSON.stringify(data))
+        console.log(data);
+        storage.setItem("user",JSON.stringify(data))
+        closeLoginModel()
+        checkUserLogged()
+        location.reload()
+        
     });
 
 

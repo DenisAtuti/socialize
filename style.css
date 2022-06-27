@@ -605,6 +605,12 @@ nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
     color: var(--background-hover-color);
     margin-top: -1rem;
 }
+.post-container .post .link-container .link.like{
+    color: #D3D3D3;
+}
+.post-container .post .link-container .link.like.active {
+    color: #ffa31a;
+}
 
 /* ///////// COMMENT CONTAINER /////// */
 .post-container .post .comment-container{
