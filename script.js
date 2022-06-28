@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     openToast(loadToast)
     getVideos (0);
     checkUserLogged()
+    getAllLikedVideos()
+    getAllFollowingVideos()
     
 });
 
@@ -10,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let page = 1
 let isLogedIn = false;
 const storage = window.localStorage;
+const baseUrl = "https://socialize-backend.herokuapp.com"
 
 
 // this will run when the user is loged in
@@ -94,27 +97,11 @@ function menuIconClicked() {
     const postContainer = document.querySelector(".post-container")
     forYouBtn.forEach(item =>{
         item.addEventListener("click",()=>{
-            window.location.href = "https://atutidennis.com/";          
+            window.location.href = "#";          
         })
     })
 
-    const followingBtn = document.querySelectorAll(".following")
-    followingBtn.forEach(item =>{
-        item.addEventListener("click",() =>{
-   
-            window.location.href = "https://atutidennis.com/";
-            
-        })
-    })
 
-    const likedBtn = document.querySelectorAll(".liked")
-    likedBtn.forEach(item =>{ 
-        item.addEventListener("click",() =>{
-   
-            window.location.href = "https://atutidennis.com/";
-
-        })
-    })
     
 }
 
@@ -257,6 +244,8 @@ let clearTimeoutAfterCall = null
 let contextshit = " "
 let affiliateToCall = " "
 let AffiliatePageCount = 0
+let likedPageCount = 1
+let followingPageCount = 1
 let videoPageCount = 1
 let lastPage = false;
 function getMoreVideosEveryMinute(videos) {
@@ -284,6 +273,25 @@ function getMoreVideosEveryMinute(videos) {
                         if(!lastPage){
                             getAffiliateVideosCall(affiliateToCall, AffiliatePageCount)
                             AffiliatePageCount++
+                        }else{
+                            console.log("last page");
+                            closeToast(fetchToast)
+                        }
+                      break;
+
+                    case "liked":
+                        if(!lastPage){
+                            getAllLikedVideosCall(likedPageCount)
+                            likedPageCount++
+                        }else{
+                            console.log("last page");
+                            closeToast(fetchToast)
+                        }
+                      break;
+                    case "following":
+                        if(!lastPage){
+                            getAllFollowingVideosCall(followingPageCount)
+                            followingPageCount++
                         }else{
                             console.log("last page");
                             closeToast(fetchToast)
@@ -425,7 +433,7 @@ function incrementVideoLike(likeIcon) {
     const videoId = parseInt(likeIcon.parentElement.parentElement.dataset.target)
     const username = JSON.parse(storage.getItem("user")).username;
 
-    fetch(`http://localhost:8080/api/v1/videos/add/like?videoId=${videoId}&username=${username}`,{
+    fetch(`${baseUrl}/add/like?videoId=${videoId}&username=${username}`,{
         method: 'POST'
     }).then(response =>{
         if(response.ok){
@@ -457,7 +465,7 @@ function decrementVideoLike(likeIcon) {
     const videoId = parseInt(likeIcon.parentElement.parentElement.dataset.target)
     const username = JSON.parse(storage.getItem("user")).username;
 
-    fetch(`http://localhost:8080/api/v1/videos/remove/like?videoId=${videoId}&username=${username}`,{
+    fetch(`${baseUrl}/api/v1/videos/remove/like?videoId=${videoId}&username=${username}`,{
         method: 'POST'
     }).then(response =>{
         if(response.ok){
@@ -490,8 +498,7 @@ function setLikeIcon(params) {
 }
 
 //follow button on clicked
-function followBtnClicked() {
-    const followBtns = document.querySelectorAll(".follow-btn")
+function followBtnClicked(followBtns) {
     const isUserLoggedIn = storage.getItem("isUserLoggedIn")
 
     followBtns.forEach(btn =>{
@@ -500,9 +507,9 @@ function followBtnClicked() {
             const button = btn.querySelector("button");
 
             if (button.classList.contains("active")) {
-                button.innerHTML = 'Following';
+                button.innerText = 'Following';
             }else{
-                button.innerHTML = 'Follow';
+                button.innerText = 'Follow';
             }
 
             btn.addEventListener("click",()=>{
@@ -533,7 +540,7 @@ function followBtnClicked() {
 // add affiliate follower with current user
 function addAffiliateFollower(affiliateName) {
     const jwtToken = storage.getItem("token")
-    fetch(`http://localhost:8080/api/v1/user/follow?affiliateName=${affiliateName}`, {
+    fetch(`${baseUrl}/api/v1/user/follow?affiliateName=${affiliateName}`, {
         method: 'POST',
         headers: {
                 Authorization: jwtToken,
@@ -564,7 +571,7 @@ function addAffiliateFollower(affiliateName) {
 // add affiliate follower with current user
 function removeAffiliateFollower(affiliateName) {
     const jwtToken = storage.getItem("token")
-    fetch(`http://localhost:8080/api/v1/user/unfollow?affiliateName=${affiliateName}`, {
+    fetch(`${baseUrl}/api/v1/user/unfollow?affiliateName=${affiliateName}`, {
         method: 'POST',
         headers: {
                 Authorization: jwtToken,
@@ -595,7 +602,7 @@ function removeAffiliateFollower(affiliateName) {
 
 // add view count as soon as it appear on the screen
 function addViewCount(videoId) {
-    fetch(`http://localhost:8080/api/v1/videos/add/view/${videoId}`,{
+    fetch(`${baseUrl}/api/v1/videos/add/view/${videoId}`,{
         method: 'POST'
     })
           
@@ -653,7 +660,7 @@ function getVideos (videoPageCount) {
     // const username = JSON.parse(storage.getItem("user")).username;
     // ?page=${videoPageCount}${url}
 
-  fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/page`)
+  fetch(`${baseUrl}/api/v1/videos/page`)
   .then(response =>{
       if (response.ok) {
         return response.json() 
@@ -683,14 +690,13 @@ function getAffiliateVideos(affiliateNames) {
     affiliateNames.forEach(affiliate =>{
         affiliate.addEventListener("click",() =>{
             console.log(affiliate.innerText);
-            getAffiliateVideosCall(affiliate.innerText,AffiliatePageCount);
-            AffiliatePageCount++
+            getAffiliateVideosCall(affiliate.innerText,0);
+            AffiliatePageCount = 1
+            lastPage = false
         })
     })
     
 }
-
-
 
 function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
 
@@ -701,7 +707,7 @@ function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
         url = `&username=${username}`
     }
 
-    fetch(`https://socialize-backend.herokuapp.com/api/v1/videos/get/affiliate/videos/${affiliate}?page=${AffiliatePageCount}${url}`)
+    fetch(`${baseUrl}/api/v1/videos/get/affiliate/videos/${affiliate}?page=${AffiliatePageCount}${url}`)
     .then(response =>{
         if (response.ok) {
             contextshit = "affiliate"
@@ -735,6 +741,116 @@ function getAffiliateVideosCall(affiliate,AffiliatePageCount) {
         console.log(error);
     })
     
+}
+
+// get all the liked videos
+function getAllLikedVideos(){
+    const likedIcons = document.querySelectorAll(".liked-videos")
+    likedIcons.forEach(icon =>{
+        icon.addEventListener("click",()=>{
+            getAllLikedVideosCall(0)
+            likedPageCount = 1
+            lastPage = false
+        })
+    })
+}
+
+// get all the liked videos from backed
+function getAllLikedVideosCall(likedPageCount) {
+    const jwtToken = storage.getItem("token")
+    fetch(`${baseUrl}/api/v1/videos/get/all/liked/videos?page=${likedPageCount}`, {
+        method: 'GET',
+        headers: {
+                Authorization: jwtToken,
+        },
+    }).then(response =>{
+        if (response.ok) {
+            contextshit = "liked"
+            closeToast(fetchToast)
+           return response.json()
+
+        }else if((response.status >= 400 && response.status < 600) ){
+
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+                
+                const loginModel = document.querySelector(".login-model-container")
+                loginModel.classList.add("active")
+            })
+           
+        }
+    }).then(data =>{
+        console.log("liked page number"+likedPageCount);
+        if(data.totalPages <= likedPageCount){
+            lastPage = true;
+        }
+        if(likedPageCount <= 0){
+            document.querySelector(".post-container").innerHTML = ""                    
+        }
+        createVideoPost(data.content)
+
+    })
+}
+// get all the following videos
+function getAllFollowingVideos(){
+    const followingIcons = document.querySelectorAll(".following-video")
+    followingIcons.forEach(icon =>{
+        icon.addEventListener("click",()=>{
+            getAllFollowingVideosCall(0)
+            followingPageCount = 1
+            lastPage = false
+        })
+    })
+}
+
+// get all the following videos from backed
+function getAllFollowingVideosCall(followingPageCount) {
+    const jwtToken = storage.getItem("token")
+    fetch(`${baseUrl}/api/v1/videos/get/following?page=${followingPageCount}`, {
+        method: 'GET',
+        headers: {
+                Authorization: jwtToken,
+        },
+    }).then(response =>{
+        if (response.ok) {
+            contextshit = "following"
+            closeToast(fetchToast)
+           return response.json()
+
+        }else if((response.status >= 400 && response.status < 600) ){
+
+            response.json().then(info =>{
+                const errorText = document.querySelector(".toast.error > p")
+                errorText.innerText = info.message
+                openToast(errorToast)
+                setTimeout(() => {
+                        closeToast(errorToast)
+                },3000);
+
+                console.log(info.message);
+                
+                const loginModel = document.querySelector(".login-model-container")
+                loginModel.classList.add("active")
+            })
+           
+        }
+    }).then(data =>{
+        if(data.totalPages <= followingPageCount){
+            lastPage = true;
+        }
+        if(followingPageCount <= 0){
+            document.querySelector(".post-container").innerHTML = ""                    
+        }
+        createVideoPost(data.content)
+
+    })
 }
 
 // create each post card after api call
@@ -867,11 +983,13 @@ function createVideoPost(videoList) {
     const likeIcon = []
     const headerLinkContainer = []
     const affiliateNames = []
+    const followBtns = []
     posts.forEach(post =>{
         likeIcon.push(post.querySelector(".like"))
         headerLinkContainer.push(post.querySelector(".loading-icon"))
         videos.push(post.querySelector("video"))
         affiliateNames.push(post.querySelector(".post-header > .profile-container > .profile > .username > p"))
+        followBtns.push(post.querySelector(".post-header > .profile-container > .profile > .follow-btn"))
     })
 
     observeVideoPost(posts)
@@ -882,6 +1000,7 @@ function createVideoPost(videoList) {
     showLoadingIconWhenBuffering(videos)
     getAffiliateVideos(affiliateNames)
     removeLoginModelFromVideoIcon();
+    followBtnClicked(followBtns)
 
 }
 
@@ -1053,7 +1172,7 @@ loginForm.addEventListener("submit",(e) =>{
     const formDataSerialised = Object.fromEntries(formData);
     console.log(formDataSerialised);
 
-    fetch("http://localhost:8080/api/v1/user/join", {
+    fetch(`${baseUrl}/api/v1/user/join`, {
         method: "POST",
         body: JSON.stringify(formDataSerialised),
         headers: {
