@@ -14,19 +14,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,900&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-    <title>Socialize</title>
+    <link rel="icon" href="/images/logo-icon (1).png">
+    <title>vida</title>
 </head>
 <body>
     <nav>
-        <div class="brand">Socialize</div>
+        <a href="/">
+            <div class="brand">
+                <img src="images/vida (2).png" alt="" srcset="">
+            </div>
+        </a>
         <div class="search">
-            <form action="#">
-                <input class="search-input" type="search" placeholder="Search accounts and videos">
+            <form action="#" id="search-form">
+                <input name="search" id="search-input" class="search-input" type="search" placeholder="Search accounts and videos">
                 <button type="submit">
                     <i class="fas fa-search"></i>
                 </button>
                 
             </form>
+            <div class="search-result-container">
+                <ul>
+                    
+                </ul>
+            </div>
         </div>
         <div class="login open-login-model" >
             <!-- <button>Login</button> -->
@@ -60,7 +70,7 @@
                     <i class="fas fa-sign-out-alt"></i>
                     <p>Full Screen</p>
                 </div>
-                <div class="item mini-menu-logout">
+                <div class="item mini-menu-logout logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <p>Logout</p>
                 </div>
@@ -94,68 +104,59 @@
                     <p class="headline">Login to follow creators, like videos make and view comments</p>
                     <button class="open-login-model">Login</button>
                 </div>
-                <div class="side-logout-btn">
+                <div class="side-logout-btn logout-btn">
                     <button>Logout</button>
                 </div>
             </div>
             <div class="menu-suggested-accounts">
                 <P class="headline">Suggested accounts</P>
-                <div class="account open-login-model">
-                    <img src="https://robohash.org/dennis" alt="">
-                    <div>
-                        <p>Burak</p>
-                        <span>Chef</span>
-                    </div>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="account open-login-model">
-                    <img src="https://robohash.org/dennis" alt="">
-                    <div>
-                        <p>Burak</p>
-                        <span>Chef</span>
-                    </div>
-                    <i class="fas fa-check"></i>
-                </div>
-                
-                <div class="account open-login-model">
-                    <img src="https://robohash.org/dennis" alt="">
-                    <div>
-                        <p>Burak</p>
-                        <span>Chef</span>
-                    </div>
-                    <i class="fas fa-check"></i>
+                <div class="suggested-account-container">
+                    
                 </div>
                 
             </div>
-            <div class="menu-discover">
-                <p class="headline">Discover</p>
-                <div class="tag-container">
-                    <div class="tag">burak</div>
-                    <div class="tag">burak</div>
-                    <div class="tag">burak</div>
-                </div>
+            
+
+        </div>
+        <div class="content-container">
+            <div class="post-container">
+                
             </div>
-            <div class="menu-footer">
-                <p class="headline">Teams of use</p>
-                <p class="footer">This is tiktok look alike for all the deleted 
-                    or banned tiktok and other social media content
-                </p>
-                <p class="footer">
-                    To be an affliate and be able to upload your videos or
-                    other videos, click <a href="#">here</a>
-                </p>
-                <p class="footer">
-                    @Socialize all right preserved 2022
-                </p>
+            <div class="commenting-container">
+                <div class="commenting-wrapper">
+                    <div class="title"><span>0</span> comment(s)</div>
+                    <div class="commenting-list">
+                       
+                         
+                    </div>
+                    <i class="fas fa-times comment-close-icon"></i>
+                    <div class="add-comment">
+                        <div class="image">
+                            <img src="https://robohash.org/dennis" alt="" srcset="">
+                        </div>
+                        <form class="comment-form">
+                            <input type="text" placeholder="Add comment ...">
+                            <button type="submit">
+                                <i class="far fa-paper-plane"></i>
+                            </button>
+                        </form>
+                        <form class="reply-form active">
+                            <input type="text" placeholder="">
+                            <button type="submit">
+                                <i class="far fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
         </div>
-        <div class="post-container">          
-            
-        </div>
+        
+        
         
     </div>
+
+    
     
     <div class="login-model-container">
         <div class="login-model">
@@ -183,26 +184,20 @@
 
     <div class="toast-container">
         <div class="toast-wrapper">
-            <div class="toast loading">
-                <p>Loading  </p>
+            <div class="toast processing">
+                <p></p>
                 <i class="fas fa-circle-notch fa-spin"></i>
             </div>
-            <div class="toast last-page">
-                <p>Last page </p>
+            
+            <div class="toast success">
+                <p></p>
                 <i class="fas fa-circle-notch fa-spin"></i>
             </div>
-            <div class="toast fetching">
-                <p>Fetching more</p>
+            <div class="toast danger">
+                <p></p>
                 <i class="fas fa-circle-notch fa-spin"></i>
             </div>
-            <div class="toast downloading">
-                <p>Still downloading</p>
-                <i class="fas fa-circle-notch fa-spin"></i>
-            </div>
-            <div class="toast error">
-                <p>Server error</p>
-                <i class="fas fa-circle-notch fa-spin"></i>
-            </div>
+            
         </div>    
     </div>
 
