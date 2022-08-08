@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let page = 1
 let isLogedIn = false;
 const storage = window.localStorage;
-const baseUrl = "http://localhost:8080"
-// const baseUrl = "https://socialize-backend.herokuapp.com"
+// const baseUrl = "http://localhost:8080"
+const baseUrl = "https://socialize-backend.herokuapp.com"
 
 // checking if the url is share or just the host
 function hasQueryParams() {
