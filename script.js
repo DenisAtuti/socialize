@@ -1350,6 +1350,7 @@ function createVideoPost(videoList) {
     shareBtnClicked()
     displayAds()
     observeLastVideo()
+    getAllAds()
     
 }
 
@@ -1404,14 +1405,17 @@ function displayAds() {
 
                 
                 if (entry.target.classList.contains("ad-container")) {
+
                     
                     if (entry.isIntersecting) {
-                    // console.log("what the fuck");
 
-                    entry.target.classList.add("active")
-                    setTimeout(() => {
-                        entry.target.style.bottom = "0"       
-                    }, 2000);
+                        // entry.target.classList.add("active")
+                         
+                        setTimeout(() => {
+                            // entry.target.style.bottom = "0"
+                        }, 2000);
+
+
 
                     }else{
 
@@ -1433,6 +1437,33 @@ function displayAds() {
 
     clickAdCloseIcon();
 }
+
+
+  
+
+
+// getting all add links
+function getAllAds() {
+    const ads = document.querySelectorAll(".ad-container");
+    ads.forEach(ad =>{
+        const ad_Link = ad.querySelector("a")
+        ad_Link.addEventListener("click",(avoidAdLinkLooping))
+    })
+}
+
+function avoidAdLinkLooping(event) {
+    const adId = event.target.parentElement.parentElement.parentElement.parentElement.dataset.target
+    updatingAdClicks(adId)
+    
+}
+
+// updating clicks backend
+async function updatingAdClicks(adId) {
+    const response = await fetch(`${baseUrl}/api/v1/ad/add/click/${adId}`)
+    const data = await response.text();
+    console.log(data);
+}
+
 
 
 // COMMENT SECTION
