@@ -28,7 +28,7 @@ function hasQueryParams() {
     }
 }
 
-// Checking validity of token
+// Checking validity of token yes
 function isTokenValid(jwtToken) {
     fetch(`${baseUrl}/api/v1/videos/token/validity`, {
         method: 'GET',
