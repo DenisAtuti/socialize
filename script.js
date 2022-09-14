@@ -42,6 +42,8 @@ function isTokenValid(jwtToken) {
 
         }else if((response.status >= 400 && response.status < 600) ){
 
+            storage.clear();
+
             response.json().then(info =>{
 
                 openToast(dangerToast,info.message)
@@ -60,6 +62,7 @@ function isTokenValid(jwtToken) {
             showLoginBtn() 
             menuIconClicked()
             enableSentButton()
+            showMiniLogoutBtn()
             
 
         }else{
@@ -92,23 +95,9 @@ function hideProfile() {
 
 
 // DESKTOP MENU SECTION
-// .......side menu button.....
-function showLoginBtn() {
-    const loginMenuBtn = document.querySelector(".side-login-btn")
-    const logoutMenuBtn = document.querySelector(".side-logout-btn")
 
-    loginMenuBtn.style.display = "none"
-    logoutMenuBtn.style.display = "block"
-    
-}
 
-function hideLoginBtn(){
-    const loginMenuBtn = document.querySelector(".side-login-btn")
-    const logoutMenuBtn = document.querySelector(".side-logout-btn")
-
-    loginMenuBtn.style.display = "block"
-    logoutMenuBtn.style.display = "none"
-}
+// mini menu log 
 
 
 //.......toggle side menu it......
@@ -362,10 +351,25 @@ miniMenuIcon.addEventListener("click",()=>{
     miniMenu.classList.toggle("active")
 })
 
+// closing the mini mobile menu when item icon is clicked
+
+function closeMiniMobileMenu() {
+
+    const miniMenuItems = document.querySelectorAll(".mini-menu-list div")
+    const miniMenu = document.querySelector(".mini-menu-list")
+
+    miniMenuItems.forEach(item =>{
+        item.addEventListener("click",()=>{
+            miniMenu.classList.remove("active")
+        })
+    })
+    
+}
+
+closeMiniMobileMenu()
+
+
 // VIDEO POST SECTION
-
-
-
 
 //.......auto play as soon as it visible
 function observeVideoPost(posts) {
@@ -1409,10 +1413,10 @@ function displayAds() {
                     
                     if (entry.isIntersecting) {
 
-                        // entry.target.classList.add("active")
+                        entry.target.classList.add("active")
                          
                         setTimeout(() => {
-                            // entry.target.style.bottom = "0"
+                            entry.target.style.bottom = "0"
                         }, 2000);
 
 
@@ -1964,6 +1968,7 @@ function addReplyTop(reply) {
 
 
 // LOGIN SECTION 
+
 //.......highligt primary color inputs .....
 const inputs = document.querySelectorAll(".model-controller input")
 inputs.forEach(input =>{
@@ -1980,6 +1985,25 @@ inputs.forEach(input =>{
         }
     })
 })
+
+
+// .......side menu button.....
+function showLoginBtn() {
+    const loginMenuBtn = document.querySelector(".side-login-btn")
+    const logoutMenuBtn = document.querySelector(".side-logout-btn")
+   
+    loginMenuBtn.style.display = "none"
+    logoutMenuBtn.style.display = "block" 
+    
+}
+
+function hideLoginBtn(){
+    const loginMenuBtn = document.querySelector(".side-login-btn")
+    const logoutMenuBtn = document.querySelector(".side-logout-btn")
+
+    loginMenuBtn.style.display = "block"
+    logoutMenuBtn.style.display = "none"
+}
 
 //...... open login model .....
 function openLoginModel() {
@@ -2038,17 +2062,24 @@ loginForm.addEventListener("submit",(e) =>{
 
     }).then( data =>{
         console.log(data);
-        storage.setItem("user",JSON.stringify(data))
-        closeLoginModel()
-        displayProfile()
-        showLoginBtn() 
-        menuIconClicked()
-        enableSentButton()
+        if (data === undefined) {
+            console.log("you are fucking me");
+        }else{
+            storage.setItem("user",JSON.stringify(data))
+            closeLoginModel()
+            displayProfile()
+            showLoginBtn() 
+            menuIconClicked()
+            enableSentButton()
+            showMiniLogoutBtn()
+        }
+        
         
     });
 
 
 })
+
 function logoutBtnClicked(){
     const logoutBtn = document.querySelectorAll(".logout-btn")
     logoutBtn.forEach(btn =>{
@@ -2056,12 +2087,45 @@ function logoutBtnClicked(){
             hideProfile();
             hideLoginBtn()
             disbleSentButton()
+            showMiniLoginBtn()
             localStorage.clear();
         })
     })
 }
 
 logoutBtnClicked()
+
+// toggle mini menu login logout
+function showMiniLogoutBtn() {
+    const logoutMiniMenuIcon = document.querySelector(".item.mini-logout-btn-damn.logout-btn")
+    const loginMiniMenuIcon = document.querySelector(".item.mini-login-btn-damn")
+
+    loginMiniMenuIcon.style.display = "none";
+    logoutMiniMenuIcon.style.display = "block";;
+   
+}
+function showMiniLoginBtn() {
+    const logoutMiniMenuIcon = document.querySelector(".item.mini-logout-btn-damn.logout-btn")
+    const loginMiniMenuIcon = document.querySelector(".item.mini-login-btn-damn")
+
+    loginMiniMenuIcon.style.display = "block";
+    logoutMiniMenuIcon.style.display = "none";;
+   
+}
+
+// when mini menu login icon clicked
+function miniMenuLoginIconClicked() {
+    const loginMiniMenuIcon = document.querySelector(".item.mini-login-btn-damn")
+    const loginModel = document.querySelector(".login-model-container")
+
+    loginMiniMenuIcon.addEventListener("click",()=>{
+        loginModel.classList.add("active")
+        
+    })
+}
+
+miniMenuLoginIconClicked();
+
 
 
 // TOAST SECTION

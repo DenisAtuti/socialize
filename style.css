@@ -217,9 +217,28 @@ nav .mini-menu-container .mini-menu-list .item i{
     padding-right: 1rem;
     font-size: 2rem;
 }
-nav .mini-menu-container .mini-menu-list .item.mini-menu-logout{
+nav .mini-menu-container .mini-menu-list .mini-log{
     border-top: solid 0.2rem var(--accent-color);
+    width:100%;
 }
+nav .mini-menu-container .mini-menu-list .mini-logout-btn-damn{
+    display: none;
+}
+
+nav .mini-menu-container .mini-menu-list .mini-log button{
+    border: none;
+    background-color: transparent;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--light-gey);
+    font-family:inherit
+}
+/* nav .mini-menu-container .mini-menu-list .mini-logout-btn-damn.active{
+    display: none;
+}
+nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
+    display: none;
+} */
 
 /* /////// CONTAINER STYLING//////// */
 
