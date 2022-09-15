@@ -1201,7 +1201,58 @@ nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
     transition: margin 0.4s;
 }
 
+/* AGE VERIFICATION SECTION */
+.verification-model {
+    position: absolute;
+    height:100%;
+    width: 100%;
+    top:0;
+    left:0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity: 0;
+    pointer-events:none
 
+}
+.verification-model.active{
+    opacity:1;
+    pointer-events: auto;
+
+}
+.verification-model .verification-container{
+    color:#fff;
+    border:solid 0.1rem var(--primary-color);
+    padding:3rem;
+    margin: 1rem;
+}
+.verification-model .verification-container .verification-content{
+    font-size:2rem
+}
+.verification-model .verification-container .verification-btn{
+    margin-top: 3rem;
+    width: 100%;
+    display: flex;
+    justify-content:center
+}
+.verification-model .verification-container .verification-btn button{
+    outline:none;
+    margin: 1rem;
+    padding:1rem 2rem;
+    font-family:inherit;
+    font-weight: 800;
+    border: solid 0.1rem var(--primary-color);
+    cursor: pointer;
+}
+.verification-model .verification-container .verification-btn button.older{
+    background-color: var(--primary-color);
+}
+.verification-model .verification-container .verification-btn button.younger{
+    color: var(--primary-color);
+    background-color: transparent;
+}
 
 /* Responsive */
 @media (max-width:1400px) {

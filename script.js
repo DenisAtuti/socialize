@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const token = window.localStorage.getItem("token")
     if(token){
         isTokenValid(token) 
+    }else{
+        verificationBtnsClicked();
     }
     // getVideos ();
     hasQueryParams() 
@@ -2290,3 +2292,21 @@ function getSubredditVideo(subreddit,page) {
     })
 }
 
+// AGE VERIFICATION SECTION
+
+function verificationBtnsClicked() {
+    const ageModel = document.querySelector(".verification-model")
+    const olderBtn = document.querySelector(".verification-model .verification-container .verification-btn .older")
+    const youngerBtn = document.querySelector(".verification-model .verification-container .verification-btn .younger")
+    
+    ageModel.classList.add("active")
+    
+    olderBtn.addEventListener("click",()=>{
+        ageModel.classList.remove("active")
+    })
+
+    youngerBtn.addEventListener("click",()=>{
+        window.location.href = "https://watchcartoononline.bz/";
+
+    })
+}
