@@ -486,6 +486,12 @@ nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
 .post-container .post .profile-container .profile .username p{
     font-size: 2rem;
     margin-right: 1rem;
+    font-weight:900;
+    transition: all 0.4s;
+}
+.post-container .post .profile-container .profile .username p:hover{
+    color:var(--primary-color);
+    transition: all 0.4s;
 }
 
 .post-container .post .profile-container .profile .username i{
@@ -1349,7 +1355,7 @@ nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
         display: inline-block;
     }
     nav .mini-menu-container .mini-menu-list{
-        top:8rem
+        top:8rem;
     }
 
     .container .menu-container{
