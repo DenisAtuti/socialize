@@ -185,7 +185,7 @@ nav .mini-menu-container{
 }
 nav .mini-menu-container .mini-menu-icon i{
     font-size: 3rem;
-    color: var(--light-gey);
+    color: var(--primary-color);
 }
 nav .mini-menu-container .mini-menu-list{
     position: absolute;
@@ -193,7 +193,7 @@ nav .mini-menu-container .mini-menu-list{
     max-height: 0;
     overflow: hidden;
     right: 0;
-    top:6rem;
+    top:8rem;
     color: var(--light-gey);
     background-color: rgba(211, 211, 211, 0.2);
     transition: max-height 0.5s ease;
@@ -1268,6 +1268,9 @@ nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
     /* .container .menu-container{
         width: 100%;
     } */
+    nav .mini-menu-container .mini-menu-list{
+        top:7.3rem
+    }
     .container .menu-container{
         display: none;
     }
@@ -1344,6 +1347,9 @@ nav .mini-menu-container .mini-menu-list .mini-login-btn-damn.active{
 
     nav .mini-menu-container{
         display: inline-block;
+    }
+    nav .mini-menu-container .mini-menu-list{
+        top:8rem
     }
 
     .container .menu-container{

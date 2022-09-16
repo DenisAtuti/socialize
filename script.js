@@ -1306,7 +1306,7 @@ function createVideoPost(videoList) {
                 <div class="ad">
                     <a href="${video.ad.affiliateLink}"  target="_blank" rel="noopener noreferrer">
                         <div class="image">
-                            <img src="${video.ad.imageLocationUrl}"  alt="" srcset="">
+                            <img src="${video.ad.clientImageUrl}"  alt="" srcset="">
                         </div>
                     </a>
                     
